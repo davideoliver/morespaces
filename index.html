@@ -6,9 +6,90 @@
     <meta name="referrer" content="strict-origin-when-cross-origin" />
     <title>MoreSpaces</title>
     <link rel="stylesheet" href="style.css" />
+    <script src="scripts.js" defer></script>
   </head>
   <body>
     <div class="page-shell">
+      <div class="login-overlay" id="loginOverlay" aria-hidden="true">
+        <div class="login-modal" role="dialog" aria-modal="true" aria-labelledby="loginTitle">
+          <button type="button" class="close-login" data-login-close aria-label="Fechar formulário">×</button>
+          <h2 id="loginTitle">Login</h2>
+          <form id="cadastroForm" novalidate>
+            <div class="form-group">
+              <label for="password">Senha:</label>
+              <input type="password" id="password" name="password" placeholder="Digite sua senha" required>
+              <span id="password-error" class="field-error">*A senha deve ter no mínimo 8 caracteres.</span>
+            </div>
+
+            <div class="form-group">
+              <label for="loginNumber">Número de Identificação:</label>
+              <input type="number" min="0" max="100" step="1" id="loginNumber" name="loginNumber" placeholder="Aceita apenas valores numéricos" required>
+            </div>
+
+            <div class="form-group">
+              <label for="loginEmail">Email:</label>
+              <input type="email" id="loginEmail" name="loginEmail" pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$" placeholder="Digite seu email" required>
+              <span id="mensagem-erro" class="field-error">E-mail inválido</span>
+            </div>
+
+            <div class="form-group">
+              <label for="loginWebsite">URL (Link)</label>
+              <input type="url" id="loginWebsite" name="loginWebsite" placeholder="https://exemplo.com" required>
+              <span id="website-error" class="field-error">A URL deve começar com http:// ou https://</span>
+            </div>
+
+            <div class="form-group">
+              <label for="loginDescricao">Descrição</label>
+              <textarea id="loginDescricao" rows="4" placeholder="Insira seu texto longo aqui..." required></textarea>
+            </div>
+
+            <div class="form-group">
+              <label class="checkbox-line">
+                <input type="checkbox" id="loginTermos" required> Aceito os termos e condições
+              </label>
+            </div>
+
+            <div class="form-group">
+              <div class="radio-group" id="genero-group">
+                <label for="genero" class="radio-label">Gênero</label>
+                <div class="radio-options">
+                  <label><input type="radio" name="genero" value="masculino" required> Masculino</label>
+                  <label><input type="radio" name="genero" value="feminino"> Feminino</label>
+                  <label><input type="radio" name="genero" value="outro"> Outro</label>
+                </div>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="loginEstado">Estado</label>
+              <select id="loginEstado" required>
+                <option value="">Selecione...</option>
+                <option value="SP">São Paulo</option>
+                <option value="RJ">Rio de Janeiro</option>
+                <option value="MG">Minas Gerais</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label for="loginNascimento">Data de Nascimento</label>
+              <input type="date" id="loginNascimento" min="1900-01-01" max="2026-12-31" required>
+            </div>
+
+            <div class="form-group">
+              <label for="loginHorario">Horário de Atendimento</label>
+              <input type="time" id="loginHorario" required>
+            </div>
+
+            <div class="form-group">
+              <label for="loginCor">Cor Favorita</label>
+              <input type="color" id="loginCor" value="#000000" required>
+            </div>
+
+            <button type="submit">Cadastrar</button>
+          </form>
+        </div>
+      </div>
+
       <header class="site-header">
         <a class="brand" href="#home">
           <span class="brand-mark" aria-hidden="true">
@@ -18,8 +99,12 @@
             </svg>
           </span>
           <span>MoreSpaces</span>
+          <div class="clock">
+          <div class="time" id="time">12:00:00</div>
+        </div>
         </a>
         <nav>
+          <button type="button" class="login-trigger" data-login-open>Login</button>
           <a href="#home">Home</a>
           <a href="#about">Sobre</a>
           <a href="#faq">FAQ</a>
@@ -37,8 +122,15 @@
               A <span title="A única e melhor"><u>MoreSpaces</u></span> é uma associação responsável por viabilizar a
               <b>criação de espaços dos mais infinitos tipos</b> para seus usuários e colaboradores.
             </p>
+            <div class="home-actions">
+              <button type="button" class="login-trigger login-trigger--large" data-login-open>Acessar login</button>
+            </div>
           </div>
-          <img src="https://upload.wikimedia.org/wikipedia/commons/b/bb/HobbyTown_USA_Oshkosh_interior_under_construction_2002_%28The_Backrooms%29.jpg?utm_source=pt.wikipedia.org&utm_campaign=imageinfo&utm_content=thumbnail_unscaled" alt="Imagem de horizo" />
+          <img 
+          src="https://upload.wikimedia.org/wikipedia/commons/b/bb/HobbyTown_USA_Oshkosh_interior_under_construction_2002_%28The_Backrooms%29.jpg?utm_source=pt.wikipedia.org&utm_campaign=imageinfo&utm_content=thumbnail_unscaled"
+          alt="Imagem de um espaço" 
+          onmouseover="this.src='https://upload.wikimedia.org/wikipedia/commons/thumb/f/f9/Lorain_High_School_hallway.jpg/960px-Lorain_High_School_hallway.jpg?utm_source=pt.wikipedia.org&utm_campaign=parser&utm_content=thumbnail'" 
+          onmouseout="this.src='https://upload.wikimedia.org/wikipedia/commons/b/bb/HobbyTown_USA_Oshkosh_interior_under_construction_2002_%28The_Backrooms%29.jpg?utm_source=pt.wikipedia.org&utm_campaign=imageinfo&utm_content=thumbnail_unscaled1'"/>
         </section>
 
         <section id="about">
@@ -98,8 +190,18 @@
           </header>
           <div class="faq-carousel" data-faq-carousel>
             <div class="faq-carousel__controls">
-              <button class="faq-nav" type="button" data-prev aria-label="Pergunta anterior">←</button>
-              <button class="faq-nav" type="button" data-next aria-label="Próxima pergunta">→</button>
+              <audio src="https://cdn.freesound.org/previews/658/658431_7780897-lq.mp3" id="click"></audio>
+              <button id="prevBtn" class="faq-nav" type="button" data-prev aria-label="Pergunta anterior">←</button>
+              <button id="nextBtn" class="faq-nav" type="button" data-next aria-label="Próxima pergunta">→</button>
+              <script>
+                document.getElementById("prevBtn").addEventListener("click", function(){
+                document.getElementById("click").play();
+                });
+                document.getElementById("nextBtn").addEventListener("click", function(){
+                document.getElementById("click").play();
+                }
+              );
+              </script>
             </div>
             <ol class="faq-carousel__track">
               <li class="faq-slide is-active">
@@ -110,14 +212,17 @@
                   para atender às necessidades de seus clientes e parceiros.
                 </p>
                 <code>#include &lt;iostream&gt;
-int main() {
-  std::cout &lt;&lt; "Hello, World!" &lt;&lt; std::endl;
-  return 0;
-}</code>
+                  int main() {
+                    std::cout &lt;&lt; "Hello, World!" &lt;&lt; std::endl;
+                    return 0;
+                  }</code>
               </li>
               <li class="faq-slide">
                 <h2>Onde nós estamos?</h2>
                 <p title="Sem exceções"><u>Em todos os espaços.</u></p>
+                <audio controls>
+                <source src="https://cdn.freesound.org/previews/475/475061_9608356-lq.mp3" type="audio/mpeg">
+                </audio>
               </li>
               <li class="faq-slide">
                 <h2>Como posso colaborar?</h2>
@@ -147,8 +252,8 @@ int main() {
               <input type="text" id="nome" name="nome" required />
             </div>
             <div>
-              <label for="email">E-mail:</label>
-              <input type="email" id="email" name="email" required />
+              <label for="contatoEmail">E-mail:</label>
+              <input type="email" id="contatoEmail" name="contatoEmail" required />
             </div>
             <div>
               <label for="escolha">É interno?</label>
