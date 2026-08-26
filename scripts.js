@@ -215,3 +215,59 @@ function updateTime() {
 
 setInterval(updateTime, 1000); // Atualiza a cada segundo
 updateTime(); // Chama a função para exibir o tempo atual imediatamente
+
+// 1. Função que usa Closure para manter o contador de consultas de forma privada
+function criarRastreador() {
+    let tentativas = 0; // Variável privada protegida pela closure
+
+    return function(codigoPedido) {
+        tentativas++;
+        const elementoStatus = document.getElementById("statusFaq");
+        
+        if (!codigoPedido) {
+            elementoStatus.textContent = "Por favor, digite um código de pedido.";
+            return Promise.reject("Código vazio");
+        }
+
+        elementoStatus.textContent = `Consultando base de dados... (Consulta #${tentativas})`;
+
+        // 2. Retornando uma Promise para simular a requisição assíncrona
+        return new Promise((resolve, reject) => {
+            setTimeout(() => {
+                // Simulando uma verificação simples
+                if (codigoPedido.toUpperCase() === "PEDRO123") {
+                    resolve(`Sucesso! O pedido ${codigoPedido.toUpperCase()} foi despachado e está a caminho.`);
+                } else {
+                    reject(`Aviso: O código "${codigoPedido}" não foi encontrado em nosso sistema.`);
+                }
+            }, 1500); // Simula 1.5 segundos de espera
+        });
+    };
+}
+
+// Inicializa a closure fora do evento para preservar o estado de "tentativas"
+const consultarStatus = criarRastreador();
+
+// 3. Evento assíncrono acoplado ao botão do FAQ
+document.addEventListener("DOMContentLoaded", () => {
+    const botao = document.getElementById("btnRastrearFaq");
+    const input = document.getElementById("inputPedido");
+    const elementoStatus = document.getElementById("statusFaq");
+
+    if (botao) {
+        botao.addEventListener("click", async () => {
+            const codigo = input.value.trim();
+            
+            try {
+                // Aguarda a Promise ser resolvida
+                const mensagemSucesso = await consultarStatus(codigo);
+                elementoStatus.style.color = "green";
+                elementoStatus.textContent = mensagemSucesso;
+            } catch (erro) {
+                // Captura caso a Promise seja rejeitada
+                elementoStatus.style.color = "red";
+                elementoStatus.textContent = erro;
+            }
+        });
+    }
+});

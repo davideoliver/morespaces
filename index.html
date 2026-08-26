@@ -235,16 +235,23 @@
 
         <section id="contact">
           <header>
-            <h1>Contatos</h1>
+            <h1>Contatos</h1
           </header>
           <figure>
             <img src="images/handshake.jpg" alt="Imagem representando formas de contato" />
-            <figcaption>Maneiras de solicitar voluntariamente nossos serviços :D</figcaption>
+            <figcaption>Maneiras de solicitar ou acompanhar voluntariamente nossos serviços :D</figcaption>
           </figure>
-          <article>
-            <h2>Telefone Local</h2>
+          <h2>Tem algum serviço já em curso?</h2>
+            <div class="faq-item">
+                <p>Digite seu código abaixo para verificar o status em tempo real:</p>
+                
+                <!-- Elementos interativos para a Promise + Closure -->
+                <input type="text" id="inputPedido" placeholder="Ex: SALA13">
+                <button id="btnRastrearFaq" style="font-weight: bold; margin-top: 10px;">Consultar Status</button>
+                <p id="statusFaq" style="font-weight: bold; margin-top: 10px;"></p>
+            </div>
+          <h2>Telefone Local</h2>
             <p>(+000) 99999-9999</p>
-          </article>
           <h2>Mande sua mensagem!</h2>
           <form action="/enviar" method="POST">
             <div>
