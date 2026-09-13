@@ -6,9 +6,12 @@
     <meta name="referrer" content="strict-origin-when-cross-origin" />
     <title>MoreSpaces</title>
     <link rel="stylesheet" href="style.css" />
+    <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
     <script src="scripts.js" defer></script>
   </head>
   <body>
+    <div id="background-color-app" aria-hidden="true"></div>
     <div class="page-shell">
       <div class="login-overlay" id="loginOverlay" aria-hidden="true">
         <div class="login-modal" role="dialog" aria-modal="true" aria-labelledby="loginTitle">
@@ -118,10 +121,11 @@
           <div class="hero-copy">
             <h1>Início</h1>
             <h2>Espaços modernos para ideias que querem crescer.</h2>
-            <p>
-              A <span title="A única e melhor"><u>MoreSpaces</u></span> é uma associação responsável por viabilizar a
-              <b>criação de espaços dos mais infinitos tipos</b> para seus usuários e colaboradores.
-            </p>
+            <div
+              id="typing-animation-app"
+              class="typing-animation-app"
+              data-text="A MoreSpaces é uma associação responsável por viabilizar a criação de espaços dos mais infinitos tipos para seus usuários e colaboradores."
+            ></div>
             <div class="home-actions">
               <button type="button" class="login-trigger login-trigger--large" data-login-open>Acessar login</button>
             </div>
@@ -138,7 +142,12 @@
             <h1>Sobre</h1>
           </header>
           <figure>
-            <img src="images/past.jpg" alt="Imagem representando a companhia no passado" />
+            <div
+              id="fade-in-image-app"
+              class="fade-in-image-app"
+              data-src="images/past.jpg"
+              data-alt="Imagem representando a companhia no passado"
+            ></div>
             <figcaption>Primeiras atuações da MoreSpaces</figcaption>
           </figure>
           <article>
@@ -230,7 +239,7 @@
               </li>
             </ol>
           </div>
-          <iframe src="https://www.youtube.com/embed/d_qchRtOz7I" title="Vídeo de apresentação"></iframe>
+          <div id="video-buffer-app" class="video-buffer-app" data-video-id="d_qchRtOz7I"></div>
         </section>
 
         <section id="contact">
@@ -316,9 +325,11 @@
               <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 2h10a5 5 0 0 1 5 5v10a5 5 0 0 1-5 5H7a5 5 0 0 1-5-5V7a5 5 0 0 1 5-5Zm0 2a3 3 0 0 0-3 3v10a3 3 0 0 0 3 3h10a3 3 0 0 0 3-3V7a3 3 0 0 0-3-3H7Zm5 3.5A4.5 4.5 0 1 1 7.5 12 4.5 4.5 0 0 1 12 7.5Zm0 2A2.5 2.5 0 1 0 14.5 12 2.5 2.5 0 0 0 12 9.5Zm5.25-3.25a1.25 1.25 0 1 1-1.25 1.25 1.25 1.25 0 0 1 1.25-1.25Z"/></svg>
             </a>
           </div>
-          <p>
-            Davi De Oliveira Costa - Sistemas Computacionais 06/08/2026 &copy; 2026 MoreSpaces. Todos os direitos reservados.
-          </p>
+          <div
+            id="sliding-text-app"
+            class="sliding-text-app"
+            data-text="Davi De Oliveira Costa - Sistemas Computacionais 06/08/2026 | © 2026 MoreSpaces. Todos os direitos reservados."
+          ></div>
         </footer>
       </main>
     </div>

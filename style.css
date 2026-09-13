@@ -211,10 +211,35 @@ section figcaption {
   font-size: clamp(1.2rem, 2vw, 1.5rem);
 }
 
+.typing-text {
+  min-height: 5.1em;
+}
+
+.typing-caret {
+  display: inline-block;
+  width: 2px;
+  height: 1.1em;
+  margin-left: 3px;
+  vertical-align: -0.2em;
+  background: var(--accent);
+  animation: typingCaret 700ms steps(1, end) infinite;
+}
+
+@keyframes typingCaret {
+  50% {
+    opacity: 0;
+  }
+}
+
 #home img,
 figure img {
   border-radius: 20px;
   box-shadow: 0 12px 30px rgba(1, 8, 5, 0.3);
+}
+
+.fade-in-image {
+  opacity: 0;
+  transition: opacity 50ms linear;
 }
 
 article {
@@ -432,6 +457,45 @@ aside a {
   font-size: 0.95rem;
 }
 
+.sliding-text-app {
+  display: grid;
+  width: min(100%, 760px);
+  gap: 8px;
+}
+
+.sliding-text-viewport {
+  width: 100%;
+  overflow: hidden;
+  white-space: nowrap;
+  border-block: 1px solid var(--border);
+  padding: 8px 0;
+}
+
+.sliding-text-track {
+  display: inline-block;
+  min-width: max-content;
+  transform: translateX(-50%);
+}
+
+.sliding-text-viewport.is-running .sliding-text-track {
+  animation: slideText 18s linear infinite;
+}
+
+@keyframes slideText {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+.sliding-text-toggle {
+  justify-self: center;
+  padding: 7px 12px;
+  font-size: 0.8rem;
+}
+
 .social-links {
   display: flex;
   gap: 10px;
@@ -461,12 +525,62 @@ social-links a:focus-visible {
   fill: var(--accent);
 }
 
-iframe {
+.video-buffer {
   width: 100%;
   max-width: 640px;
-  min-height: 320px;
-  border: 0;
+  padding: 12px;
+  border: 1px solid var(--border);
   border-radius: 20px;
+  background: #020705;
+}
+
+.video-buffer__player {
+  aspect-ratio: 16 / 9;
+  overflow: hidden;
+  border-radius: 12px;
+}
+
+.video-buffer__player iframe {
+  width: 100%;
+  height: 100%;
+  border: 0;
+}
+
+.video-buffer__fallback {
+  display: grid;
+  height: 100%;
+  place-content: center;
+  gap: 10px;
+  padding: 24px;
+  color: var(--muted);
+  text-align: center;
+}
+
+.video-buffer__fallback strong {
+  color: var(--text);
+}
+
+.video-buffer__status {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 10px 2px 7px;
+  color: var(--muted);
+  font-size: 0.85rem;
+}
+
+.video-buffer__track {
+  height: 6px;
+  overflow: hidden;
+  border-radius: 999px;
+  background: rgba(184, 207, 195, 0.18);
+}
+
+.video-buffer__progress {
+  height: 100%;
+  border-radius: inherit;
+  background: linear-gradient(90deg, var(--accent-strong), var(--accent));
+  transition: width 250ms ease;
 }
 
 @media (max-width: 900px) {

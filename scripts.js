@@ -271,3 +271,253 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 });
+
+  const VideoBuffer = ({ videoId }) => {
+    const [progress, setProgress] = React.useState(0);
+    const [status, setStatus] = React.useState('Preparando vídeo...');
+    const playerRef = React.useRef(null);
+
+    React.useEffect(() => {
+      let progressTimer;
+      let isMounted = true;
+
+      const updateProgress = () => {
+        if (!playerRef.current || typeof playerRef.current.getVideoLoadedFraction !== 'function') return;
+
+        const loadedFraction = playerRef.current.getVideoLoadedFraction();
+        if (isMounted) {
+          setProgress(Math.round(loadedFraction * 100));
+        }
+      };
+
+      const createPlayer = () => {
+        if (!isMounted || !window.YT || !window.YT.Player) return;
+
+        playerRef.current = new window.YT.Player('presentation-video', {
+          videoId,
+          playerVars: { rel: 0, modestbranding: 1 },
+          events: {
+            onReady: () => {
+              setStatus('Vídeo pronto');
+              progressTimer = window.setInterval(updateProgress, 250);
+              updateProgress();
+            },
+            onStateChange: (event) => {
+              if (event.data === window.YT.PlayerState.BUFFERING) {
+                setStatus('Carregando vídeo...');
+              } else if (event.data === window.YT.PlayerState.PLAYING) {
+                setStatus('Reproduzindo');
+              } else if (event.data === window.YT.PlayerState.ENDED) {
+                setStatus('Vídeo concluído');
+              }
+            },
+            onError: () => setStatus('Não foi possível carregar o vídeo')
+          }
+        });
+      };
+
+      if (window.location.protocol === 'file:') {
+        setStatus('Abra esta página pelo XAMPP para carregar o vídeo');
+        return () => {
+          isMounted = false;
+        };
+      }
+
+      if (window.YT && window.YT.Player) {
+        createPlayer();
+      } else {
+        const previousCallback = window.onYouTubeIframeAPIReady;
+        window.onYouTubeIframeAPIReady = () => {
+          previousCallback?.();
+          createPlayer();
+        };
+
+        if (!document.querySelector('script[src="https://www.youtube.com/iframe_api"]')) {
+          const apiScript = document.createElement('script');
+          apiScript.src = 'https://www.youtube.com/iframe_api';
+          document.head.appendChild(apiScript);
+        }
+      }
+
+      return () => {
+        isMounted = false;
+        window.clearInterval(progressTimer);
+        playerRef.current?.destroy();
+      };
+    }, [videoId]);
+
+    return React.createElement(
+      'div',
+      { className: 'video-buffer' },
+      React.createElement(
+        'div',
+        { id: 'presentation-video', className: 'video-buffer__player' },
+        window.location.protocol === 'file:' && React.createElement(
+          'div',
+          { className: 'video-buffer__fallback' },
+          React.createElement('strong', null, 'O vídeo precisa ser aberto por um servidor local.'),
+          React.createElement('a', { href: `https://www.youtube.com/watch?v=${videoId}`, target: '_blank', rel: 'noreferrer' }, 'Abrir vídeo no YouTube')
+        )
+      ),
+      React.createElement(
+        'div',
+        { className: 'video-buffer__status', 'aria-live': 'polite' },
+        React.createElement('span', null, status),
+        React.createElement('span', null, `${progress}%`)
+      ),
+      React.createElement(
+        'div',
+        { className: 'video-buffer__track', role: 'progressbar', 'aria-label': 'Carregamento do vídeo', 'aria-valuemin': '0', 'aria-valuemax': '100', 'aria-valuenow': progress },
+        React.createElement('div', { className: 'video-buffer__progress', style: { width: `${progress}%` } })
+      )
+    );
+  };
+
+  document.addEventListener('DOMContentLoaded', () => {
+    const videoRoot = document.getElementById('video-buffer-app');
+    if (videoRoot && window.React && window.ReactDOM) {
+      ReactDOM.createRoot(videoRoot).render(
+        React.createElement(VideoBuffer, { videoId: videoRoot.dataset.videoId })
+      );
+    }
+  });
+
+  const interpolateColor = (start, end, amount) => {
+    const startRgb = start.match(/[A-Fa-f\d]{2}/g).map((value) => parseInt(value, 16));
+    const endRgb = end.match(/[A-Fa-f\d]{2}/g).map((value) => parseInt(value, 16));
+    const color = startRgb.map((value, index) => Math.round(value + (endRgb[index] - value) * amount));
+    return `#${color.map((value) => value.toString(16).padStart(2, '0')).join('')}`;
+  };
+
+  const GradualBackground = () => {
+    React.useEffect(() => {
+      const startColor = '#332e16';
+      const targetColor = '#9b9476';
+      let progress = 0;
+
+      const updateBackground = () => {
+        progress = Math.min(progress + 0.002, 1);
+        document.body.style.setProperty('--bg', interpolateColor(startColor, targetColor, progress));
+      };
+
+      const intervalId = window.setInterval(updateBackground, 1000);
+      updateBackground();
+
+      return () => window.clearInterval(intervalId);
+    }, []);
+
+    return null;
+  };
+
+  document.addEventListener('DOMContentLoaded', () => {
+    const backgroundRoot = document.getElementById('background-color-app');
+    if (backgroundRoot && window.React && window.ReactDOM) {
+      ReactDOM.createRoot(backgroundRoot).render(React.createElement(GradualBackground));
+    }
+  });
+
+  const TypingText = ({ text }) => {
+    const [visibleText, setVisibleText] = React.useState('');
+
+    React.useEffect(() => {
+      let characterIndex = 0;
+      const intervalId = window.setInterval(() => {
+        characterIndex += 1;
+        setVisibleText(text.slice(0, characterIndex));
+
+        if (characterIndex >= text.length) {
+          window.clearInterval(intervalId);
+        }
+      }, 35);
+
+      return () => window.clearInterval(intervalId);
+    }, [text]);
+
+    return React.createElement(
+      'p',
+      { className: 'typing-text', 'aria-label': text },
+      visibleText,
+      visibleText.length < text.length && React.createElement('span', { className: 'typing-caret', 'aria-hidden': 'true' })
+    );
+  };
+
+  document.addEventListener('DOMContentLoaded', () => {
+    const typingRoot = document.getElementById('typing-animation-app');
+    if (typingRoot && window.React && window.ReactDOM) {
+      ReactDOM.createRoot(typingRoot).render(
+        React.createElement(TypingText, { text: typingRoot.dataset.text })
+      );
+    }
+  });
+
+  const FadeInImage = ({ source, alt }) => {
+    const imageRef = React.useRef(null);
+
+    React.useEffect(() => {
+      let opacity = 0;
+      const intervalId = window.setInterval(() => {
+        opacity = Math.min(opacity + 0.05, 1);
+        if (imageRef.current) {
+          imageRef.current.style.opacity = opacity;
+        }
+
+        if (opacity >= 1) {
+          window.clearInterval(intervalId);
+        }
+      }, 50);
+
+      return () => window.clearInterval(intervalId);
+    }, []);
+
+    return React.createElement('img', {
+      ref: imageRef,
+      src: source,
+      alt,
+      className: 'fade-in-image'
+    });
+  };
+
+  document.addEventListener('DOMContentLoaded', () => {
+    const fadeInRoot = document.getElementById('fade-in-image-app');
+    if (fadeInRoot && window.React && window.ReactDOM) {
+      ReactDOM.createRoot(fadeInRoot).render(
+        React.createElement(FadeInImage, {
+          source: fadeInRoot.dataset.src,
+          alt: fadeInRoot.dataset.alt
+        })
+      );
+    }
+  });
+
+  const SlidingText = ({ text }) => {
+    const [isRunning, setIsRunning] = React.useState(true);
+
+    return React.createElement(
+      React.Fragment,
+      null,
+      React.createElement(
+        'div',
+        { className: `sliding-text-viewport${isRunning ? ' is-running' : ''}` },
+        React.createElement('span', { className: 'sliding-text-track', 'aria-label': text }, `${text}   ${text}`)
+      ),
+      React.createElement(
+        'button',
+        {
+          type: 'button',
+          className: 'sliding-text-toggle',
+          onClick: () => setIsRunning((running) => !running),
+          'aria-pressed': isRunning
+        },
+        isRunning ? 'Pausar texto' : 'Iniciar texto'
+      )
+    );
+  };
+
+  document.addEventListener('DOMContentLoaded', () => {
+    const slidingTextRoot = document.getElementById('sliding-text-app');
+    if (slidingTextRoot && window.React && window.ReactDOM) {
+      ReactDOM.createRoot(slidingTextRoot).render(
+        React.createElement(SlidingText, { text: slidingTextRoot.dataset.text })
+      );
+    }
+  });
