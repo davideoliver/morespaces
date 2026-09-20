@@ -3,6 +3,7 @@
 
 <head>
   <meta charset="UTF-8" />
+  <meta name="description" content="A MoreSpaces é uma companhia que cria espaços para ideias, projetos e pessoas.">
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="referrer" content="strict-origin-when-cross-origin" />
   <title>MoreSpaces | Home</title>
@@ -19,7 +20,7 @@
       </a>
       <nav aria-label="Navegação principal">
         <a href="#home" aria-current="page">Home</a>
-        <a href="#about">Sobre</a>
+        <a href="#about-start">Sobre</a>
         <a href="#faq">FAQ</a>
         <a href="#contact">Contatos</a>
         <a href="#login">Login</a>
@@ -27,6 +28,7 @@
       </nav>
     </header>
     <main class="page-content">
+      <article class="page-article">
       <section id="home">
         <div class="hero-copy">
           <p class="eyebrow">MoreSpaces</p>
@@ -35,26 +37,27 @@
           </p>
           <a class="button-link" href="#about">Conheça a MoreSpaces</a>
         </div>
-        <img
-          src="https://upload.wikimedia.org/wikipedia/commons/b/bb/HobbyTown_USA_Oshkosh_interior_under_construction_2002_%28The_Backrooms%29.jpg"
-          alt="Interior de um espaço em construção" />
       </section>
-      <aside>
-        Criamos espaços para que ninguém precise se espaçar.
-        <a href="arquivos/verdade.txt" download>Baixar informações adicionais</a>
+      </article>
+      <aside id="about-start">
+        <center>Criamos espaços para que ninguém precise se espaçar.</center>
       </aside>
+      <article class="page-article">
       <section id="about">
         <header>
           <p class="eyebrow">Nossa história</p>
           <h1>Sobre a MoreSpaces</h1>
         </header>
+        <div>
         <h2>Valores</h2>
         <p>Confiança, fidelidade, inovação e principalmente excelência em todas as nossas atuações.</p>
+        </div>
+        <div>
         <h2>História</h2>
         <p>Fundada em 1900, a MoreSpaces nasceu como uma companhia familiar e cresceu criando espaços para pessoas,
           projetos e novas ideias.</p>
-        <blockquote>“Criamos espaços para que ninguém precise se espaçar.”</blockquote>
-        <table>
+        </div>
+          <table>
           <caption>Eventos importantes para a história da MoreSpaces</caption>
           <thead>
             <tr>
@@ -74,6 +77,8 @@
           </tbody>
         </table>
       </section>
+      </article>
+      <article class="page-article">
       <section id="faq">
         <header>
           <p class="eyebrow">Dúvidas comuns</p>
@@ -101,13 +106,15 @@
           </ol>
         </div>
       </section>
-      <section id="contact">
+      </article>
+      <article class="page-article">
+      <section id="contact" class="auth-section">
         <header>
+          <div>
           <p class="eyebrow">Fale conosco</p>
           <h1>Contatos</h1>
+          </div>
         </header>
-        <h2>Telefone local</h2>
-        <p>(+000) 99999-9999</p>
         <h2>Mande sua mensagem</h2>
         <form action="/enviar" method="POST">
           <div><label for="nome">Nome:</label><input type="text" id="nome" name="nome" required /></div>
@@ -117,6 +124,8 @@
           <button type="submit">Enviar</button>
         </form>
       </section>
+      </article>
+      <article class="page-article" style="background-color: #1c2c2a;">
       <section id="login" class="auth-section">
         <p class="eyebrow">Acesso</p>
         <h1>Login</h1>
@@ -130,6 +139,8 @@
         </form>
         <p>Ainda não tem cadastro? <a href="#register">Criar uma conta</a></p>
       </section>
+      </article>
+      <article class="page-article">
       <section id="register" class="auth-section">
         <p class="eyebrow">Comece agora</p>
         <h1>Cadastro</h1>
@@ -145,6 +156,7 @@
           <p id="registerMessage" class="form-message" aria-live="polite"></p>
         </form>
       </section>
+      </article>
       <footer class="site-footer">
         <div class="social-links" aria-label="Redes sociais">
           <a href="https://github.com" target="_blank" rel="noreferrer" aria-label="GitHub">

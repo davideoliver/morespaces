@@ -25,6 +25,71 @@ const initializeCarousel = () => {
 };
 
 const initializePage = () => {
+  const header = document.querySelector('.site-header');
+  const footer = document.querySelector('.site-footer');
+  const navigationLinks = Array.from(document.querySelectorAll('nav a[href^="#"]'));
+  const navigationTargets = navigationLinks
+    .map((link) => ({
+      hash: link.getAttribute('href'),
+      target: document.querySelector(link.getAttribute('href'))
+    }))
+    .filter(({ target }) => target);
+
+  const setActiveNavigation = (hash) => {
+    navigationLinks.forEach((link) => {
+      if (link.getAttribute('href') === hash) {
+        link.setAttribute('aria-current', 'page');
+      } else {
+        link.removeAttribute('aria-current');
+      }
+    });
+  };
+
+  const updateNavigationFromScroll = () => {
+    if (!header || !navigationTargets.length) return;
+
+    const headerBottom = header.getBoundingClientRect().bottom;
+    const footerTop = footer?.getBoundingClientRect().top;
+
+    if (footerTop !== undefined && footerTop <= headerBottom) {
+      navigationLinks.forEach((link) => link.removeAttribute('aria-current'));
+      return;
+    }
+
+    const visibleTarget = navigationTargets.reduce((activeTarget, currentTarget) => {
+      const targetTop = currentTarget.target.getBoundingClientRect().top;
+      return targetTop <= headerBottom + 1 ? currentTarget : activeTarget;
+    }, navigationTargets[0]);
+
+    setActiveNavigation(visibleTarget.hash);
+  };
+
+  navigationLinks.forEach((link) => {
+    link.addEventListener('click', (event) => {
+      const targetHash = link.getAttribute('href');
+      const target = document.querySelector(targetHash);
+      if (!target || !header) return;
+
+      event.preventDefault();
+      setActiveNavigation(targetHash);
+      const targetTop = target.getBoundingClientRect().top + window.scrollY;
+      const headerOffset = header.getBoundingClientRect().height;
+
+      window.scrollTo({
+        top: Math.max(0, targetTop - headerOffset),
+        behavior: 'smooth'
+      });
+      history.pushState(null, '', targetHash);
+    });
+  });
+
+  window.addEventListener('popstate', () => {
+    setActiveNavigation(window.location.hash || '#home');
+  });
+  window.addEventListener('scroll', updateNavigationFromScroll, { passive: true });
+  window.addEventListener('resize', updateNavigationFromScroll);
+  updateNavigationFromScroll();
+
   const loginForm = document.getElementById('loginForm');
   const registerForm = document.getElementById('registerForm');
 
