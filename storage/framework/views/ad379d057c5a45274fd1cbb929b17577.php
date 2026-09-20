@@ -52,7 +52,7 @@
           <p>Fundada em 1900, a MoreSpaces nasceu como uma companhia familiar e cresceu criando espaços para pessoas, projetos e novas ideias.</p>
         </div>
         <table>
-          <caption>Eventos importantes para a história da MoreSpaces</caption>
+          <caption style="background: var(--surface); margin: 4px 3px">Eventos importantes para a história da MoreSpaces</caption>
           <thead>
             <tr>
               <th>Ano</th>
