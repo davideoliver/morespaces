@@ -174,7 +174,7 @@ section label {
   padding: clamp(36px, 8vw, 120px);
   color: var(--text);
   background-color: var(--surface);
-  background-image: url("imgs/backroomshd.jpg");
+  background-image: url("../imgs/backroomshd.jpg");
   background-position: center center;
   background-size: cover;
 }
