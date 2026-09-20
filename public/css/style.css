@@ -107,6 +107,27 @@ nav a[aria-current="page"] {
   background: var(--surface-2);
 }
 
+.logout-form {
+  display: block;
+  max-width: none;
+  margin: 0;
+}
+
+.logout-form button {
+  padding: 8px 12px;
+  border-radius: 999px;
+  background: transparent;
+  color: var(--muted);
+  font-weight: 600;
+}
+
+.logout-form button:hover,
+.logout-form button:focus-visible {
+  transform: none;
+  background: var(--surface-2);
+  color: var(--text);
+}
+
 .page-content {
   display: grid;
   gap: 0;
@@ -172,7 +193,7 @@ section label {
   padding: clamp(36px, 8vw, 120px);
   color: var(--text);
   background-color: var(--surface);
-  background-image: url("../imgs/backroomshd.jpg?v=20260920-1741");
+  background-image: url("../imgs/backroomshd.webp?v=20260920-1741");
   background-position: center center;
   background-size: cover;
 }
@@ -373,17 +394,17 @@ button:hover {
 
 .form-message {
   margin: 0;
+  padding: 14px 20px;
   font-weight: 700;
-  align-self: center;
+  text-align: center;
+  background: var(--surface);
 }
 
 .form-message.is-success {
-  color: var(--accent); 
-  align-self: center;
+  color: var(--accent);
 }
 .form-message.is-error {
-  color: var(--surface-2);
-  align-self: center;
+  color: var(--text);
 }
 
 .faq-carousel {
@@ -489,6 +510,129 @@ aside {
   fill: var(--accent);
 }
 
+.files-content,
+.files-empty,
+.files-not-found {
+  min-height: calc(100vh - 82px);
+}
+
+.files-hero {
+  min-height: 340px;
+  align-content: center;
+  background: var(--surface);
+  background-image: linear-gradient(90deg, rgba(28, 44, 42, 0.96), rgba(28, 44, 42, 0.66)), url("../imgs/backroomshd.webp?v=20260920-1741");
+  background-position: center;
+  background-size: cover;
+}
+
+.files-hero h1 {
+  max-width: 760px;
+  font-size: clamp(2.2rem, 6vw, 5rem);
+}
+
+.files-levels {
+  background: var(--surface-2);
+}
+
+.files-levels > header {
+  display: grid;
+  gap: 4px;
+}
+
+.files-levels h2 {
+  margin-bottom: 0;
+  color: var(--text);
+  font-size: clamp(1.5rem, 3vw, 2.2rem);
+}
+
+.files-level-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+  gap: 14px;
+}
+
+.files-level-link {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  min-height: 96px;
+  padding: 16px;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: var(--surface);
+  color: var(--text);
+  text-decoration: none;
+  transition: transform 180ms ease, background 180ms ease;
+}
+
+.files-level-link:hover,
+.files-level-link:focus-visible {
+  transform: translateY(-2px);
+  background: var(--bg);
+}
+
+.files-level-link__number {
+  display: inline-grid;
+  place-items: center;
+  width: 48px;
+  height: 48px;
+  flex: 0 0 48px;
+  border-radius: 50%;
+  background: var(--accent);
+  color: var(--bg);
+  font-size: 1.3rem;
+  font-weight: 800;
+}
+
+.files-level-link strong,
+.files-level-link small {
+  display: block;
+}
+
+.files-level-link small {
+  margin-top: 3px;
+  color: var(--muted);
+}
+
+.files-empty {
+  display: grid;
+  align-items: center;
+  padding: clamp(36px, 8vw, 120px);
+  background-color: var(--surface);
+  background-image: linear-gradient(90deg, rgba(28, 44, 42, 0.92), rgba(28, 44, 42, 0.58)), url("../imgs/backroomshd.webp?v=20260920-1741");
+  background-position: center;
+  background-size: cover;
+}
+
+.files-empty > div {
+  max-width: 620px;
+}
+
+.files-empty h1,
+.files-not-found h1 {
+  max-width: 760px;
+  color: var(--text);
+  font-size: clamp(2rem, 5vw, 4rem);
+  line-height: 1.08;
+}
+
+.files-not-found {
+  display: grid;
+  align-content: center;
+  justify-items: start;
+  gap: 12px;
+  padding: clamp(36px, 8vw, 120px);
+  background: var(--surface);
+}
+
+.files-not-found__actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 18px;
+  margin-top: 10px;
+}
+
 @media (max-width: 640px) {
   .site-header {
     position: fixed;
@@ -504,6 +648,10 @@ aside {
 
   .page-content {
     padding-top: 78px;
+  }
+
+  .form-message {
+    padding-top: 96px;
   }
 
   .brand {
@@ -559,6 +707,21 @@ aside {
   .site-header nav a {
     padding: 10px 12px;
     border-radius: 6px;
+  }
+
+  .files-page {
+    padding-top: 78px;
+  }
+
+  .site-header nav .logout-form {
+    width: 100%;
+  }
+
+  .site-header nav .logout-form button {
+    width: 100%;
+    padding: 10px 12px;
+    border-radius: 6px;
+    text-align: left;
   }
 
   section {

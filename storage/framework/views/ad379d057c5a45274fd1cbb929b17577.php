@@ -12,7 +12,14 @@
     </button>
     <nav id="main-navigation" aria-label="Navegação principal">
       <a href="#home" aria-current="page">Home</a><a href="#about-start">Sobre</a><a href="#faq">FAQ</a>
-      <a href="#contact">Contatos</a><a href="#login">Login</a><a href="#register">Cadastro</a>
+      <a href="#contact">Contatos</a>
+      <?php if(!$isAuthenticated): ?>
+      <a href="#login">Login</a><a href="#register">Cadastro</a>
+      <?php endif; ?>
+      <?php if($isSpacesUser): ?><a href="<?php echo e(route('files')); ?>">Arquivos</a><?php endif; ?>
+      <?php if($isAuthenticated): ?>
+      <form class="logout-form" action="<?php echo e(route('logout')); ?>" method="POST"><?php echo csrf_field(); ?><button type="submit">Sair</button></form>
+      <?php endif; ?>
     </nav>
   </header>
   <?php if(session('success')): ?>
@@ -93,7 +100,7 @@
     <article class="page-article">
       <section id="contact" class="auth-section" style="padding-left: 0;">
         <figure class="auth-figure auth-figure--contact">
-          <img src="<?php echo e(asset('public/imgs/parking.jpg')); ?>?v=<?php echo e(filemtime(public_path('imgs/parking.jpg'))); ?>" alt="Espaço MoreSpaces preparado para receber novas ideias">
+          <img src="<?php echo e(asset('public/imgs/parking.webp')); ?>?v=<?php echo e(filemtime(public_path('imgs/parking.webp'))); ?>" alt="Espaço MoreSpaces preparado para receber novas ideias">
           <figcaption>Um espaço aberto para sua próxima ideia.</figcaption>
         </figure>
         <div class="auth-content">
@@ -112,6 +119,7 @@
       </section>
     </article>
 
+    <?php if(!$isAuthenticated): ?>
     <article class="page-article" style="background-color: #1c2c2a;">
       <section id="login" class="auth-section" style="padding-right: 0;">
         <div class="auth-content">
@@ -125,7 +133,7 @@
           <p>Ainda não tem cadastro? <a href="#register">Criar uma conta</a></p>
         </div>
         <figure class="auth-figure auth-figure--login">
-          <img src="<?php echo e(asset('public/imgs/pipes.jpg')); ?>?v=<?php echo e(filemtime(public_path('imgs/pipes.jpg'))); ?>" alt="Marca MoreSpaces para identificação segura">
+          <img src="<?php echo e(asset('public/imgs/pipes.webp')); ?>?v=<?php echo e(filemtime(public_path('imgs/pipes.webp'))); ?>" alt="Marca MoreSpaces para identificação segura">
           <figcaption>Seu espaço, sempre ao seu alcance.</figcaption>
         </figure>
       </section>
@@ -134,7 +142,7 @@
     <article class="page-article">
       <section id="register" class="auth-section" style="padding-left: 0;">
         <figure class="auth-figure auth-figure--register">
-          <img src="<?php echo e(asset('public/imgs/eletricstation.jpg')); ?>?v=<?php echo e(filemtime(public_path('imgs/eletricstation.jpg'))); ?>" alt="Ambiente MoreSpaces pronto para novos membros">
+          <img src="<?php echo e(asset('public/imgs/eletricstation.webp')); ?>?v=<?php echo e(filemtime(public_path('imgs/eletricstation.webp'))); ?>" alt="Ambiente MoreSpaces pronto para novos membros">
           <figcaption>Faça parte do próximo capítulo.</figcaption>
         </figure>
         <div class="auth-content">
@@ -150,6 +158,7 @@
         </div>
       </section>
     </article>
+    <?php endif; ?>
 
     <footer class="site-footer">
       <div class="social-links" aria-label="Redes sociais">
