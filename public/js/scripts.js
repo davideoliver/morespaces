@@ -37,6 +37,12 @@ const initializePage = () => {
     }))
     .filter(({ target }) => target);
 
+  const updateHeaderHeight = () => {
+    if (header) {
+      document.documentElement.style.setProperty('--header-height', `${header.getBoundingClientRect().height}px`);
+    }
+  };
+
   const setActiveNavigation = (hash) => {
     navigationLinks.forEach((link) => {
       if (link.getAttribute('href') === hash) {
@@ -107,7 +113,11 @@ const initializePage = () => {
     setActiveNavigation(window.location.hash || '#home');
   });
   window.addEventListener('scroll', updateNavigationFromScroll, { passive: true });
-  window.addEventListener('resize', updateNavigationFromScroll);
+  window.addEventListener('resize', () => {
+    updateHeaderHeight();
+    updateNavigationFromScroll();
+  });
+  updateHeaderHeight();
   updateNavigationFromScroll();
 
   const loginForm = document.getElementById('loginForm');

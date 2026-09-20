@@ -22,11 +22,15 @@
       <?php endif; ?>
     </nav>
   </header>
-  <?php if(session('success')): ?>
-  <p class="form-message is-success" role="status"><?php echo e(session('success')); ?></p>
-  <?php endif; ?>
-  <?php if($errors->any()): ?>
-  <div class="form-message is-error" role="alert"><?php echo e($errors->first()); ?></div>
+  <?php if(session('success') || $errors->any()): ?>
+  <div class="flash-messages" aria-live="polite">
+    <?php if(session('success')): ?>
+    <p class="form-message is-success" role="status"><?php echo e(session('success')); ?></p>
+    <?php endif; ?>
+    <?php if($errors->any()): ?>
+    <div class="form-message is-error" role="alert"><?php echo e($errors->first()); ?></div>
+    <?php endif; ?>
+  </div>
   <?php endif; ?>
 
   <main class="page-content">

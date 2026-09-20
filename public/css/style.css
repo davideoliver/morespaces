@@ -392,6 +392,17 @@ button:hover {
   text-align: center;
 }
 
+.flash-messages {
+  position: fixed;
+  top: var(--header-height, 0px);
+  right: 0;
+  left: 0;
+  z-index: 9;
+  overflow: hidden;
+  max-height: 120px;
+  animation: collapseFlashMessage 6s ease forwards;
+}
+
 .form-message {
   margin: 0;
   padding: 14px 20px;
@@ -405,6 +416,15 @@ button:hover {
 }
 .form-message.is-error {
   color: var(--text);
+}
+
+@keyframes collapseFlashMessage {
+  0%, 83.333% {
+    max-height: 120px;
+  }
+  100% {
+    max-height: 0;
+  }
 }
 
 .faq-carousel {
