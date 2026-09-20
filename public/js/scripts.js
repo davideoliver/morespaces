@@ -27,6 +27,8 @@ const initializeCarousel = () => {
 const initializePage = () => {
   const header = document.querySelector('.site-header');
   const footer = document.querySelector('.site-footer');
+  const menuToggle = document.querySelector('.menu-toggle');
+  const navigation = document.querySelector('#main-navigation');
   const navigationLinks = Array.from(document.querySelectorAll('nav a[href^="#"]'));
   const navigationTargets = navigationLinks
     .map((link) => ({
@@ -44,6 +46,23 @@ const initializePage = () => {
       }
     });
   };
+
+  const closeNavigation = () => {
+    if (!menuToggle || !navigation) return;
+    menuToggle.setAttribute('aria-expanded', 'false');
+    navigation.classList.remove('is-open');
+  };
+
+  menuToggle?.addEventListener('click', () => {
+    if (!navigation) return;
+    const isOpen = menuToggle.getAttribute('aria-expanded') === 'true';
+    menuToggle.setAttribute('aria-expanded', String(!isOpen));
+    navigation.classList.toggle('is-open', !isOpen);
+  });
+
+  document.addEventListener('keydown', (event) => {
+    if (event.key === 'Escape') closeNavigation();
+  });
 
   const updateNavigationFromScroll = () => {
     if (!header || !navigationTargets.length) return;
@@ -80,6 +99,7 @@ const initializePage = () => {
         behavior: 'smooth'
       });
       history.pushState(null, '', targetHash);
+      closeNavigation();
     });
   });
 
