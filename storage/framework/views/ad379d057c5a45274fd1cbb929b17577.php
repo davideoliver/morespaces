@@ -1,27 +1,31 @@
-
-
 <?php $__env->startSection('content'); ?>
 <div class="page-shell">
   <header class="site-header">
     <a class="brand" href="<?php echo e(route('home')); ?>#home" aria-label="MoreSpaces - Home">
       <img class="brand-mark" src="<?php echo e(asset('public/imgs/mswhite.png')); ?>" alt="MoreSpaces Logo" aria-hidden="true">
     </a>
+    
     <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="main-navigation">
       <span class="menu-toggle__label">Menu</span>
       <span class="menu-toggle__icon" aria-hidden="true"><span></span><span></span><span></span></span>
     </button>
     <nav id="main-navigation" aria-label="Navegação principal">
+      
       <a href="#home" aria-current="page">Home</a><a href="#about-start">Sobre</a><a href="#faq">FAQ</a>
       <a href="#contact">Contatos</a>
+      
       <?php if(!$isAuthenticated): ?>
       <a href="#login">Login</a><a href="#register">Cadastro</a>
       <?php endif; ?>
+      
       <?php if($isSpacesUser): ?><a href="<?php echo e(route('files')); ?>">Arquivos</a><?php endif; ?>
+      
       <?php if($isAuthenticated): ?>
       <form class="logout-form" action="<?php echo e(route('logout')); ?>" method="POST"><?php echo csrf_field(); ?><button type="submit">Sair</button></form>
       <?php endif; ?>
     </nav>
   </header>
+  
   <?php if(session('success') || $errors->any()): ?>
   <div class="flash-messages" aria-live="polite">
     <?php if(session('success')): ?>
@@ -62,6 +66,7 @@
           <h2>História</h2>
           <p>Fundada em 1900, a MoreSpaces nasceu como uma companhia familiar e cresceu criando espaços para pessoas, projetos e novas ideias.</p>
         </div>
+        
         <table>
           <caption style="background: var(--surface); margin: 4px 3px">Eventos importantes para a história da MoreSpaces</caption>
           <thead>
@@ -86,6 +91,7 @@
           <p class="eyebrow">Dúvidas comuns</p>
           <h1>FAQ</h1>
         </header>
+        
         <div class="faq-carousel" data-faq-carousel>
           <div class="faq-carousel__controls">
             <button class="faq-nav" type="button" data-prev aria-label="Pergunta anterior">←</button>
@@ -103,6 +109,7 @@
 
     <article class="page-article">
       <section id="contact" class="auth-section" style="padding-left: 0;">
+        
         <figure class="auth-figure auth-figure--contact">
           <img src="<?php echo e(asset('public/imgs/parking.webp')); ?>?v=<?php echo e(filemtime(public_path('imgs/parking.webp'))); ?>" alt="Espaço MoreSpaces preparado para receber novas ideias">
           <figcaption>Um espaço aberto para sua próxima ideia.</figcaption>
@@ -113,6 +120,7 @@
             <h1>Contatos</h1>
           </header>
           <h2>Mande sua mensagem</h2>
+          
           <form action="<?php echo e(route('contact')); ?>" method="POST"><?php echo csrf_field(); ?>
             <div><label for="nome">Nome:</label><input type="text" id="nome" name="nome" value="<?php echo e(old('nome')); ?>" required></div>
             <div><label for="contatoEmail">E-mail:</label><input type="email" id="contatoEmail" name="contatoEmail" value="<?php echo e(old('contatoEmail')); ?>" required></div>
@@ -123,6 +131,7 @@
       </section>
     </article>
 
+    
     <?php if(!$isAuthenticated): ?>
     <article class="page-article" style="background-color: #1c2c2a;">
       <section id="login" class="auth-section" style="padding-right: 0;">
@@ -191,4 +200,5 @@
   </main>
 </div>
 <?php $__env->stopSection(); ?>
+
 <?php echo $__env->make('layouts.app', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?><?php /**PATH C:\xampp\htdocs\morespaces\resources\views/home.blade.php ENDPATH**/ ?>

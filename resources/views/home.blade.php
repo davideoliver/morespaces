@@ -1,3 +1,4 @@
+{{-- Herda a estrutura HTML comum (head, scripts, css) do layout base. --}}
 @extends('layouts.app')
 
 @section('content')
@@ -6,22 +7,35 @@
     <a class="brand" href="{{ route('home') }}#home" aria-label="MoreSpaces - Home">
       <img class="brand-mark" src="{{ asset('public/imgs/mswhite.png') }}" alt="MoreSpaces Logo" aria-hidden="true">
     </a>
+    {{-- Botão "hambúrguer", visível apenas em telas pequenas (ver
+         media query no style.css); alterna a classe .is-open no <nav>
+         via scripts.js. --}}
     <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="main-navigation">
       <span class="menu-toggle__label">Menu</span>
       <span class="menu-toggle__icon" aria-hidden="true"><span></span><span></span><span></span></span>
     </button>
     <nav id="main-navigation" aria-label="Navegação principal">
+      {{-- Links âncora para as seções da própria Home; o destaque do
+           item ativo (aria-current) é atualizado dinamicamente pelo
+           scroll listener em scripts.js. --}}
       <a href="#home" aria-current="page">Home</a><a href="#about-start">Sobre</a><a href="#faq">FAQ</a>
       <a href="#contact">Contatos</a>
+      {{-- Login/Cadastro só aparecem para visitantes não autenticados. --}}
       @if (!$isAuthenticated)
       <a href="#login">Login</a><a href="#register">Cadastro</a>
       @endif
+      {{-- Link para a área restrita de Arquivos, liberado apenas
+           quando $isSpacesUser é verdadeiro (vindo do HomeController). --}}
       @if ($isSpacesUser)<a href="{{ route('files') }}">Arquivos</a>@endif
+      {{-- Usuário autenticado vê o botão de Sair em vez de Login/Cadastro. --}}
       @if ($isAuthenticated)
       <form class="logout-form" action="{{ route('logout') }}" method="POST">@csrf<button type="submit">Sair</button></form>
       @endif
     </nav>
   </header>
+  {{-- Faixa de mensagens de feedback (sucesso de formulário ou erros
+       de validação). Some sozinha após alguns segundos via a
+       animação CSS "collapseFlashMessage" definida em style.css. --}}
   @if (session('success') || $errors->any())
   <div class="flash-messages" aria-live="polite">
     @if (session('success'))
@@ -62,6 +76,9 @@
           <h2>História</h2>
           <p>Fundada em 1900, a MoreSpaces nasceu como uma companhia familiar e cresceu criando espaços para pessoas, projetos e novas ideias.</p>
         </div>
+        {{-- Tabela alimentada dinamicamente pelo array $events vindo do
+             HomeController — basta adicionar um item ao array no
+             controller para uma nova linha aparecer aqui automaticamente. --}}
         <table>
           <caption style="background: var(--surface); margin: 4px 3px">Eventos importantes para a história da MoreSpaces</caption>
           <thead>
@@ -86,6 +103,10 @@
           <p class="eyebrow">Dúvidas comuns</p>
           <h1>FAQ</h1>
         </header>
+        {{-- Carrossel de perguntas frequentes: os slides (.faq-slide)
+             são gerados a partir do array $faqs do controller, e a
+             navegação entre eles (setas ← →) é controlada em
+             scripts.js via initializeCarousel(). --}}
         <div class="faq-carousel" data-faq-carousel>
           <div class="faq-carousel__controls">
             <button class="faq-nav" type="button" data-prev aria-label="Pergunta anterior">←</button>
@@ -103,6 +124,10 @@
 
     <article class="page-article">
       <section id="contact" class="auth-section" style="padding-left: 0;">
+        {{-- filemtime() é usado como "cache buster": ao anexar a data de
+             modificação do arquivo na URL da imagem, o navegador é
+             forçado a buscar a versão mais recente sempre que a imagem
+             for alterada no servidor, evitando cache desatualizado. --}}
         <figure class="auth-figure auth-figure--contact">
           <img src="{{ asset('public/imgs/parking.webp') }}?v={{ filemtime(public_path('imgs/parking.webp')) }}" alt="Espaço MoreSpaces preparado para receber novas ideias">
           <figcaption>Um espaço aberto para sua próxima ideia.</figcaption>
@@ -113,6 +138,11 @@
             <h1>Contatos</h1>
           </header>
           <h2>Mande sua mensagem</h2>
+          {{-- @csrf injeta o token de proteção contra Cross-Site Request
+               Forgery, obrigatório em todo POST do Laravel.
+               old('campo') repopula o campo com o valor digitado
+               anteriormente caso a validação falhe (evita o usuário
+               ter que redigitar tudo de novo). --}}
           <form action="{{ route('contact') }}" method="POST">@csrf
             <div><label for="nome">Nome:</label><input type="text" id="nome" name="nome" value="{{ old('nome') }}" required></div>
             <div><label for="contatoEmail">E-mail:</label><input type="email" id="contatoEmail" name="contatoEmail" value="{{ old('contatoEmail') }}" required></div>
@@ -123,6 +153,9 @@
       </section>
     </article>
 
+    {{-- As seções de Login e Cadastro só são renderizadas no HTML
+         quando o visitante NÃO está autenticado — uma vez logado,
+         esse bloco inteiro desaparece da página. --}}
     @if (!$isAuthenticated)
     <article class="page-article" style="background-color: #1c2c2a;">
       <section id="login" class="auth-section" style="padding-right: 0;">

@@ -1,3 +1,8 @@
+/* ==========================================================================
+   Paleta de cores centralizada em variáveis CSS (custom properties).
+   Alterar um valor aqui reflete automaticamente em todo o site —
+   não é necessário caçar cores espalhadas pelas regras abaixo.
+   ========================================================================== */
 :root {
   --bg: #2c352e;
   --surface: #1c2c2a;
@@ -43,6 +48,8 @@ a {
   padding: 0;
 }
 
+/* Cabeçalho fixo no topo (sticky) em telas largas; vira "fixed" de
+   verdade no breakpoint mobile lá embaixo. */
 .site-header {
   display: flex;
   justify-content: space-between;
@@ -76,6 +83,8 @@ a {
   object-fit: contain;
 }
 
+/* Botão do menu hambúrguer: fica oculto no desktop e só aparece
+   dentro da media query mobile, no fim do arquivo. */
 .menu-toggle {
   display: none;
 }
@@ -102,6 +111,8 @@ nav a:focus-visible {
   background: var(--surface-2);
 }
 
+/* Destaque do link ativo, controlado via JS (setActiveNavigation
+   em scripts.js), que alterna este atributo aria-current. */
 nav a[aria-current="page"] {
   color: var(--text);
   background: var(--surface-2);
@@ -139,6 +150,8 @@ nav a[aria-current="page"] {
   width: 100%;
 }
 
+/* Efeito "zebrado": seções em posição par ganham um fundo levemente
+   diferente, criando contraste visual entre blocos consecutivos. */
 .page-article:nth-of-type(even) {
   background: var(--surface-2);
 }
@@ -183,6 +196,9 @@ section label {
   background: var(--bg);
 }
 
+/* Seção hero: imagem de fundo em tela cheia com o texto sobreposto,
+   usando clamp() para o padding se adaptar suavemente entre mobile
+   e desktop sem precisar de várias media queries. */
 .hero-copy {
   position: relative;
   display: grid;
@@ -228,6 +244,9 @@ section label {
   align-content: start;
 }
 
+/* Seção "Sobre" em duas colunas no desktop; cabeçalho, citação e
+   tabela ocupam a largura total (grid-column: 1 / -1) atravessando
+   as duas colunas. */
 #about {
   grid-template-columns: repeat(2, minmax(0, 1fr));
 }
@@ -336,6 +355,10 @@ button:hover {
   text-decoration: none;
 }
 
+/* Seções de autenticação (Login/Cadastro/Contato): layout em duas
+   colunas — conteúdo de um lado, imagem ilustrativa do outro —
+   usando minmax() para a coluna de imagem nunca ficar menor que
+   300px nem maior que 42% da largura disponível. */
 .auth-section {
   grid-template-columns: minmax(0, 1fr) minmax(300px, 42vw);
   align-items: stretch;
@@ -392,6 +415,10 @@ button:hover {
   text-align: center;
 }
 
+/* Faixa de mensagens flash (sucesso/erro). --header-height é
+   definida dinamicamente via JS (updateHeaderHeight em scripts.js)
+   para a faixa ficar sempre colada logo abaixo do cabeçalho, mesmo
+   quando ele muda de altura entre desktop e mobile. */
 .flash-messages {
   position: fixed;
   top: var(--header-height, 0px);
@@ -418,6 +445,10 @@ button:hover {
   color: var(--text);
 }
 
+/* Anima a faixa de mensagem "recolhendo" (max-height até 0) apenas
+   no último instante da duração total (a partir de 83.333% de 6s,
+   ou seja, no último 1s), criando o efeito de "sumir" suavemente
+   após alguns segundos visível. */
 @keyframes collapseFlashMessage {
   0%, 83.333% {
     max-height: 120px;
@@ -457,6 +488,8 @@ button:hover {
   padding: 0;
 }
 
+/* Apenas o slide com .is-active fica visível; a troca entre slides
+   é feita via JS (initializeCarousel em scripts.js). */
 .faq-slide {
   display: none;
   padding: 20px;
@@ -565,6 +598,9 @@ aside {
   font-size: clamp(1.5rem, 3vw, 2.2rem);
 }
 
+/* Grade responsiva "auto-fit": o número de colunas se ajusta
+   sozinho conforme o espaço disponível, sem precisar de media
+   queries extras — cada card de nível tem no mínimo 210px. */
 .files-level-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
@@ -653,6 +689,13 @@ aside {
   margin-top: 10px;
 }
 
+/* ==========================================================================
+   Breakpoint mobile (até 640px): transforma o cabeçalho em "fixed"
+   no topo, ativa o menu hambúrguer (escondendo a navegação padrão
+   e mostrando-a como um painel suspenso ao clicar), e reorganiza as
+   seções de duas colunas (Sobre, Login/Cadastro/Contato) para uma
+   única coluna empilhada.
+   ========================================================================== */
 @media (max-width: 640px) {
   .site-header {
     position: fixed;
@@ -666,6 +709,8 @@ aside {
     padding: 16px 20px;
   }
 
+  /* Compensa o header agora "fixed" (fora do fluxo normal),
+     empurrando o conteúdo para baixo na mesma altura do header. */
   .page-content {
     padding-top: 78px;
   }
@@ -708,6 +753,9 @@ aside {
     background: currentColor;
   }
 
+  /* A navegação some por padrão no mobile e só reaparece (como um
+     painel suspenso) quando a classe .is-open é adicionada via JS
+     (menuToggle click listener em scripts.js). */
   .site-header nav:not(.is-open) {
     display: none;
   }
@@ -767,6 +815,8 @@ aside {
     padding-inline: 20px;
   }
 
+  /* No mobile a imagem ilustrativa passa a vir DEPOIS do conteúdo
+     (order: 2), priorizando o texto e os formulários na leitura. */
   .auth-figure {
     order: 2;
     width: 100vw;

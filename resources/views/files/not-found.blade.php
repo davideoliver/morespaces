@@ -4,6 +4,9 @@
 
 @section('content')
 <div class="page-shell files-page">
+  {{-- Renderizada pelo HomeController::file() com status HTTP 404
+       sempre que o nível solicitado ainda não tem conteúdo real
+       (nenhuma integração com banco de dados foi feita até o momento). --}}
   <main class="files-not-found">
     <p class="eyebrow">Arquivo {{ $level }}</p>
     <h1>Este arquivo ainda não foi encontrado.</h1>

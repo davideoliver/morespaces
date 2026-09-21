@@ -1,3 +1,12 @@
+/**
+ * Inicializa o carrossel de perguntas frequentes (FAQ).
+ *
+ * Procura o container marcado com [data-faq-carousel] e, se ainda não
+ * tiver sido inicializado (evita duplicar listeners caso a função
+ * seja chamada mais de uma vez), liga os botões de "anterior" e
+ * "próximo" para alternar a classe .is-active entre os slides
+ * (.faq-slide), controlando qual pergunta fica visível.
+ */
 const initializeCarousel = () => {
   const carousel = document.querySelector('[data-faq-carousel]');
   if (!carousel || carousel.dataset.initialized === 'true') return;
@@ -12,6 +21,9 @@ const initializeCarousel = () => {
     slide.classList.toggle('is-active', index === current);
   });
 
+  // O operador módulo (%) garante o comportamento "circular": ao
+  // chegar no último slide e clicar em "próximo", volta para o
+  // primeiro (e vice-versa para "anterior").
   previousButton.addEventListener('click', () => {
     current = (current - 1 + slides.length) % slides.length;
     render();
@@ -24,12 +36,20 @@ const initializeCarousel = () => {
   render();
 };
 
+/**
+ * Função principal, executada assim que o DOM estiver pronto.
+ * Configura: menu mobile, navegação suave com destaque do link
+ * ativo conforme o scroll, os dois formulários de demonstração
+ * (login/cadastro) e o carrossel de FAQ.
+ */
 const initializePage = () => {
   const header = document.querySelector('.site-header');
   const footer = document.querySelector('.site-footer');
   const menuToggle = document.querySelector('.menu-toggle');
   const navigation = document.querySelector('#main-navigation');
   const navigationLinks = Array.from(document.querySelectorAll('nav a[href^="#"]'));
+  // Pré-calcula, para cada link de navegação, qual elemento da página
+  // ele aponta — assim evitamos repetir querySelector a cada scroll.
   const navigationTargets = navigationLinks
     .map((link) => ({
       hash: link.getAttribute('href'),
@@ -37,12 +57,18 @@ const initializePage = () => {
     }))
     .filter(({ target }) => target);
 
+  // Guarda a altura real do cabeçalho numa variável CSS (--header-height),
+  // usada por outros elementos (ex.: .flash-messages) para se
+  // posicionarem corretamente logo abaixo dele, inclusive quando o
+  // header fica "fixed" no layout mobile.
   const updateHeaderHeight = () => {
     if (header) {
       document.documentElement.style.setProperty('--header-height', `${header.getBoundingClientRect().height}px`);
     }
   };
 
+  // Marca visualmente (aria-current="page") qual link do menu
+  // corresponde à seção atualmente em foco.
   const setActiveNavigation = (hash) => {
     navigationLinks.forEach((link) => {
       if (link.getAttribute('href') === hash) {
@@ -59,6 +85,8 @@ const initializePage = () => {
     navigation.classList.remove('is-open');
   };
 
+  // Alterna a abertura/fechamento do menu mobile (hambúrguer),
+  // mantendo aria-expanded sincronizado para acessibilidade.
   menuToggle?.addEventListener('click', () => {
     if (!navigation) return;
     const isOpen = menuToggle.getAttribute('aria-expanded') === 'true';
@@ -66,21 +94,32 @@ const initializePage = () => {
     navigation.classList.toggle('is-open', !isOpen);
   });
 
+  // Fecha o menu mobile ao pressionar Esc, um padrão de acessibilidade.
   document.addEventListener('keydown', (event) => {
     if (event.key === 'Escape') closeNavigation();
   });
 
+  /**
+   * Detecta, com base na posição de rolagem (scroll), qual seção
+   * está "logo abaixo" do cabeçalho e atualiza o link ativo do menu
+   * de acordo — é o que dá a sensação de "scrollspy" na Home.
+   */
   const updateNavigationFromScroll = () => {
     if (!header || !navigationTargets.length) return;
 
     const headerBottom = header.getBoundingClientRect().bottom;
     const footerTop = footer?.getBoundingClientRect().top;
 
+    // Quando o rodapé já apareceu na tela, nenhuma seção "âncora"
+    // faz mais sentido como ativa — limpa o destaque do menu.
     if (footerTop !== undefined && footerTop <= headerBottom) {
       navigationLinks.forEach((link) => link.removeAttribute('aria-current'));
       return;
     }
 
+    // reduce percorre todas as seções e mantém a última cujo topo já
+    // passou da borda inferior do header — ou seja, a seção
+    // "correntemente visível" no momento do scroll.
     const visibleTarget = navigationTargets.reduce((activeTarget, currentTarget) => {
       const targetTop = currentTarget.target.getBoundingClientRect().top;
       return targetTop <= headerBottom + 1 ? currentTarget : activeTarget;
@@ -89,6 +128,10 @@ const initializePage = () => {
     setActiveNavigation(visibleTarget.hash);
   };
 
+  // Substitui o comportamento padrão de "salto" do navegador ao
+  // clicar em links âncora por um scroll suave que já leva em conta
+  // a altura do header fixo, evitando que o conteúdo fique escondido
+  // atrás dele.
   navigationLinks.forEach((link) => {
     link.addEventListener('click', (event) => {
       const targetHash = link.getAttribute('href');
@@ -104,14 +147,19 @@ const initializePage = () => {
         top: Math.max(0, targetTop - headerOffset),
         behavior: 'smooth'
       });
+      // Atualiza a URL (ex.: .../#faq) sem recarregar a página,
+      // permitindo compartilhar o link direto da seção.
       history.pushState(null, '', targetHash);
       closeNavigation();
     });
   });
 
+  // Reage à navegação por botões voltar/avançar do navegador.
   window.addEventListener('popstate', () => {
     setActiveNavigation(window.location.hash || '#home');
   });
+  // { passive: true } informa ao navegador que este listener nunca
+  // chama preventDefault(), permitindo otimizar a performance do scroll.
   window.addEventListener('scroll', updateNavigationFromScroll, { passive: true });
   window.addEventListener('resize', () => {
     updateHeaderHeight();
@@ -123,6 +171,10 @@ const initializePage = () => {
   const loginForm = document.getElementById('loginForm');
   const registerForm = document.getElementById('registerForm');
 
+  // Validação client-side de demonstração para o formulário de login
+  // (o formulário real do HTML usa action/method para POST no
+  // servidor; este listener é apenas um feedback visual extra caso
+  // exista um elemento #loginForm na página).
   loginForm?.addEventListener('submit', (event) => {
     event.preventDefault();
     const username = document.getElementById('loginUsername').value.trim();
@@ -133,6 +185,8 @@ const initializePage = () => {
     message.className = `form-message ${username && password ? 'is-success' : 'is-error'}`;
   });
 
+  // Mesma ideia para o cadastro: validação simples de preenchimento
+  // e tamanho mínimo de senha, apenas para feedback imediato ao usuário.
   registerForm?.addEventListener('submit', (event) => {
     event.preventDefault();
     const name = document.getElementById('registerName').value.trim();
@@ -149,6 +203,10 @@ const initializePage = () => {
   initializeCarousel();
 };
 
+// Garante que initializePage só rode depois que o HTML estiver
+// totalmente carregado — mas, se o script for injetado/executado
+// depois desse momento (documento já "interactive"/"complete"),
+// chama a função direto, sem esperar um evento que já passou.
 if (document.readyState === 'loading') {
   document.addEventListener('DOMContentLoaded', initializePage, { once: true });
 } else {
