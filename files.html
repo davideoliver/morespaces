@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MoreSpaces | Arquivos</title>
+  <link rel="icon" type="image/x-icon" href="\public\imgs\favcons\favicon.ico">
+  <link rel="stylesheet" href="css/style.css">
+  <script>
+    /* Guarda de acesso: roda ANTES do resto da página renderizar,
+       igual ao "if ($isSpacesUser)" do controller original. */
+    (function () {
+      var username = localStorage.getItem('msUsername') || '';
+      var isSpacesUser = username.toLowerCase().includes('spaces');
+      if (!isSpacesUser) {
+        window.location.replace('notfound.html');
+      }
+    })();
+  </script>
+  <script src="js/site.js" defer></script>
+</head>
+<body>
+<div class="page-shell files-page">
+  <header class="site-header">
+    <a class="brand" href="index.html#home" aria-label="MoreSpaces - Home">
+      <img class="brand-mark" src="public/imgs/mswhite.png" alt="MoreSpaces Logo" aria-hidden="true">
+    </a>
+    <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="main-navigation">
+      <span class="menu-toggle__label">Menu</span>
+      <span class="menu-toggle__icon" aria-hidden="true"><span></span><span></span><span></span></span>
+    </button>
+    <nav id="main-navigation" aria-label="Navegação principal">
+      <a href="index.html#home">Home</a>
+      <a href="index.html#about-start">Sobre</a>
+      <a href="index.html#faq">FAQ</a>
+      <a href="index.html#contact">Contatos</a>
+      <a href="index.html#login" data-auth="guest">Login</a>
+      <a href="index.html#register" data-auth="guest">Cadastro</a>
+      <a href="files.html" aria-current="page" data-auth="spaces">Arquivos</a>
+      <button type="button" id="logoutButton" data-auth="user">Sair</button>
+    </nav>
+  </header>
+
+  <main class="files-content">
+    <section class="files-hero">
+      <p class="eyebrow">M.G.E</p>
+      <h1>Arquivos</h1>
+      <p>Bem vindo agente,<br>
+      Selecione um nível para consultar os arquivos do Maior Grupo de Exploradores (M.G.E) disponíveis para cada espaço.</p>
+      <p class="note">Nota: Os arquivos podem ser acessados apenas por usuários autenticados.</p>
+    </section>
+    <section class="files-levels" aria-labelledby="files-levels-title">
+      <header>
+        <p class="eyebrow">Catálogo</p>
+        <h2 id="files-levels-title">Níveis disponíveis</h2>
+      </header>
+      <div class="files-level-grid">
+        <a class="files-level-link" href="nivel.html?level=0"><span class="files-level-link__number">0</span><span><strong>Nível 0</strong><small>Explorar arquivos</small></span></a>
+        <a class="files-level-link" href="nivel.html?level=1"><span class="files-level-link__number">1</span><span><strong>Nível 1</strong><small>Explorar arquivos</small></span></a>
+        <a class="files-level-link" href="nivel.html?level=2"><span class="files-level-link__number">2</span><span><strong>Nível 2</strong><small>Explorar arquivos</small></span></a>
+        <a class="files-level-link" href="nivel.html?level=3"><span class="files-level-link__number">3</span><span><strong>Nível 3</strong><small>Explorar arquivos</small></span></a>
+        <a class="files-level-link" href="nivel.html?level=4"><span class="files-level-link__number">4</span><span><strong>Nível 4</strong><small>Explorar arquivos</small></span></a>
+      </div>
+    </section>
+  </main>
+</div>
+</body>
+</html>

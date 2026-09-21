@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title id="pageTitle">MoreSpaces | Arquivo não encontrado</title>
+  <link rel="icon" type="image/x-icon" href="\public\imgs\favcons\favicon.ico">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<div class="page-shell files-page">
+  <main class="files-not-found">
+    <p class="eyebrow" id="levelLabel">Arquivo</p>
+    <h1>Este arquivo ainda não foi encontrado.</h1>
+    <p>O nível solicitado ficará disponível quando os arquivos forem conectados ao banco de dados.</p>
+    <div class="files-not-found__actions">
+      <a class="button-link" href="files.html">Voltar para Arquivos</a>
+      <a href="index.html#home">Ir para Home</a>
+    </div>
+  </main>
+</div>
+<script>
+  // Página-base "genérica": em vez de existir um 0.html, 1.html, 2.html... para cada
+  // nível, essa única página lê o nível pela URL (?level=N) e, no futuro, buscaria o
+  // conteúdo real num banco de dados. Sem banco, ela sempre cai neste aviso.
+  (function () {
+    var params = new URLSearchParams(window.location.search);
+    var level = params.get('level');
+    var label = level !== null && level !== '' ? level : '?';
+    document.getElementById('levelLabel').textContent = 'Arquivo ' + label;
+    document.getElementById('pageTitle').textContent = 'MoreSpaces | Arquivo ' + label + ' não encontrado';
+  })();
+</script>
+</body>
+</html>

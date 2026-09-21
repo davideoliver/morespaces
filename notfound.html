@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MoreSpaces | Arquivos indisponíveis</title>
+  <link rel="icon" type="image/x-icon" href="\public\imgs\favcons\favicon.ico">
+  <link rel="stylesheet" href="css/style.css">
+  <script src="js/site.js" defer></script>
+</head>
+<body>
+<div class="page-shell files-page">
+  <header class="site-header">
+    <a class="brand" href="index.html#home" aria-label="MoreSpaces - Home">
+      <img class="brand-mark" src="public/imgs/mswhite.png" alt="MoreSpaces Logo" aria-hidden="true">
+    </a>
+    <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="main-navigation">
+      <span class="menu-toggle__label">Menu</span>
+      <span class="menu-toggle__icon" aria-hidden="true"><span></span><span></span><span></span></span>
+    </button>
+    <nav id="main-navigation" aria-label="Navegação principal">
+      <a href="index.html#home">Home</a>
+      <a href="index.html#about-start">Sobre</a>
+      <a href="index.html#faq">FAQ</a>
+      <a href="index.html#contact">Contatos</a>
+      <a href="index.html#login" data-auth="guest">Login</a>
+      <a href="index.html#register" data-auth="guest">Cadastro</a>
+      <a href="files.html" data-auth="spaces">Arquivos</a>
+      <button type="button" id="logoutButton" data-auth="user">Sair</button>
+    </nav>
+  </header>
+
+  <main class="files-empty">
+    <div>
+      <p class="eyebrow">MoreSpaces</p>
+      <h1>Não há arquivos disponíveis.</h1>
+      <p>Continue acompanhando a MoreSpaces para saber quando novos espaços forem liberados.</p>
+      <a class="button-link" href="index.html#home">Voltar para Home</a>
+    </div>
+  </main>
+</div>
+</body>
+</html>

@@ -19,4 +19,4 @@ Para desenvolvimento alternativo, `php artisan serve` continua disponível.
 - `routes/web.php`: rotas públicas e endpoints dos formulários.
 - `app/Http/Controllers/HomeController.php`: dados da página e validação das requisições.
 - `resources/views`: layout e view Blade da página.
-- `public/css`, `public/js` e `public/imgs`: assets públicos.
+- `public/css`, `public/js` e `public/imgs/`: assets públicos.
