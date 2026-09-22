@@ -21,7 +21,7 @@
       <?php if($isSpacesUser): ?><a href="<?php echo e(route('files')); ?>">Arquivos</a><?php endif; ?>
       
       <?php if($isAuthenticated): ?>
-      <form class="logout-form" action="<?php echo e(route('logout')); ?>" method="POST"><?php echo csrf_field(); ?><button type="submit">Sair</button></form>
+      <form class="logout-form" action="<?php echo e(route('logout')); ?>" method="POST"><input type="hidden" name="_token" value="<?php echo e(csrf_token()); ?>"><button type="submit">Sair</button></form>
       <?php endif; ?>
     </nav>
   </header>
@@ -38,7 +38,7 @@
   <?php endif; ?>
 
   <main class="page-content">
-    <article class="page-article">
+    <div class="page-article">
       <section id="home">
         <div class="hero-copy">
           <p class="eyebrow">MoreSpaces</p>
@@ -47,23 +47,23 @@
           <a class="button-link" href="#about">Conheça a MoreSpaces</a>
         </div>
       </section>
-    </article>
+    </div>
     <aside id="about-start">
-      <center>Criamos espaços para que ninguém precise se espaçar.</center>
+      <p class="about-tagline" style="text-align: center">Criamos espaços para que ninguém precise se espaçar.</p>
     </aside>
 
-    <article class="page-article">
+    <div class="page-article">
       <section id="about">
         <header>
           <p class="eyebrow">Nossa história</p>
-          <h1>Sobre a MoreSpaces</h1>
+          <h2>Sobre a MoreSpaces</h2>
         </header>
         <div>
-          <h2>Valores</h2>
+          <h3>Valores</h3>
           <p>Confiança, fidelidade, inovação e principalmente excelência em todas as nossas atuações.</p>
         </div>
         <div>
-          <h2>História</h2>
+          <h3>História</h3>
           <p>Fundada em 1900, a MoreSpaces nasceu como uma companhia familiar e cresceu criando espaços para pessoas, projetos e novas ideias.</p>
         </div>
         
@@ -83,13 +83,13 @@
           </tbody>
         </table>
       </section>
-    </article>
+    </div>
 
-    <article class="page-article">
+    <div class="page-article">
       <section id="faq">
         <header>
           <p class="eyebrow">Dúvidas comuns</p>
-          <h1>FAQ</h1>
+          <h2>FAQ</h2>
         </header>
         
         <div class="faq-carousel" data-faq-carousel>
@@ -99,15 +99,15 @@
           </div>
           <ol class="faq-carousel__track">
             <?php $__currentLoopData = $faqs; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $faq): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?><li class="faq-slide">
-              <h2><?php echo e($faq['question']); ?></h2>
+              <h3><?php echo e($faq['question']); ?></h3>
               <p><?php echo e($faq['answer']); ?></p>
             </li><?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
           </ol>
         </div>
       </section>
-    </article>
+    </div>
 
-    <article class="page-article">
+    <div class="page-article">
       <section id="contact" class="auth-section" style="padding-left: 0;">
         
         <figure class="auth-figure auth-figure--contact">
@@ -117,11 +117,11 @@
         <div class="auth-content">
           <header>
             <p class="eyebrow">Fale conosco</p>
-            <h1>Contatos</h1>
+            <h2>Contatos</h2>
           </header>
-          <h2>Mande sua mensagem</h2>
+          <h3>Mande sua mensagem</h3>
           
-          <form action="<?php echo e(route('contact')); ?>" method="POST"><?php echo csrf_field(); ?>
+          <form action="<?php echo e(route('contact')); ?>" method="POST"><input type="hidden" name="_token" value="<?php echo e(csrf_token()); ?>">
             <div><label for="nome">Nome:</label><input type="text" id="nome" name="nome" value="<?php echo e(old('nome')); ?>" required></div>
             <div><label for="contatoEmail">E-mail:</label><input type="email" id="contatoEmail" name="contatoEmail" value="<?php echo e(old('contatoEmail')); ?>" required></div>
             <div><label for="mensagem">Mensagem:</label><textarea id="mensagem" name="mensagem" required><?php echo e(old('mensagem')); ?></textarea></div>
@@ -129,16 +129,16 @@
           </form>
         </div>
       </section>
-    </article>
+    </div>
 
     
     <?php if(!$isAuthenticated): ?>
-    <article class="page-article" style="background-color: #1c2c2a;">
+    <div class="page-article" style="background-color: #1c2c2a;">
       <section id="login" class="auth-section" style="padding-right: 0;">
         <div class="auth-content">
           <p class="eyebrow">Acesso</p>
-          <h1>Login</h1>
-          <form action="<?php echo e(route('login')); ?>" method="POST"><?php echo csrf_field(); ?>
+          <h2>Login</h2>
+          <form action="<?php echo e(route('login')); ?>" method="POST"><input type="hidden" name="_token" value="<?php echo e(csrf_token()); ?>">
             <div><label for="loginUsername">Usuário</label><input type="text" id="loginUsername" name="username" autocomplete="username" required></div>
             <div><label for="loginPassword">Senha</label><input type="password" id="loginPassword" name="password" autocomplete="current-password" required></div>
             <button type="submit">Entrar</button>
@@ -150,9 +150,9 @@
           <figcaption>Seu espaço, sempre ao seu alcance.</figcaption>
         </figure>
       </section>
-    </article>
+    </div>
 
-    <article class="page-article">
+    <div class="page-article">
       <section id="register" class="auth-section" style="padding-left: 0;">
         <figure class="auth-figure auth-figure--register">
           <img src="<?php echo e(asset('public/imgs/eletricstation.webp')); ?>?v=<?php echo e(filemtime(public_path('imgs/eletricstation.webp'))); ?>" alt="Ambiente MoreSpaces pronto para novos membros">
@@ -160,8 +160,8 @@
         </figure>
         <div class="auth-content">
           <p class="eyebrow">Comece agora</p>
-          <h1>Cadastro</h1>
-          <form action="<?php echo e(route('register')); ?>" method="POST"><?php echo csrf_field(); ?>
+          <h2>Cadastro</h2>
+          <form action="<?php echo e(route('register')); ?>" method="POST"><input type="hidden" name="_token" value="<?php echo e(csrf_token()); ?>">
             <div><label for="registerName">Nome</label><input type="text" id="registerName" name="name" autocomplete="name" required></div>
             <div><label for="registerRg">RG</label><input type="text" id="registerRg" name="rg" required></div>
             <div><label for="registerUsername">Usuário</label><input type="text" id="registerUsername" name="username" autocomplete="username" required></div>
@@ -170,11 +170,11 @@
           </form>
         </div>
       </section>
-    </article>
+    </div>
     <?php endif; ?>
 
     <footer class="site-footer">
-      <div class="social-links" aria-label="Redes sociais">
+      <nav class="social-links" aria-label="Redes sociais">
         <a href="https://github.com" target="_blank" rel="noreferrer" aria-label="GitHub">
           <svg viewBox="0 0 24 24" aria-hidden="true">
             <path
@@ -193,7 +193,7 @@
               d="M7 2h10a5 5 0 0 1 5 5v10a5 5 0 0 1-5 5H7a5 5 0 0 1-5-5V7a5 5 0 0 1 5-5Zm0 2a3 3 0 0 0-3 3v10a3 3 0 0 0 3 3h10a3 3 0 0 0 3-3V7a3 3 0 0 0-3-3H7Zm5 3.5A4.5 4.5 0 1 1 7.5 12 4.5 4.5 0 0 1 12 7.5Zm0 2A2.5 2.5 0 1 0 14.5 12 2.5 2.5 0 0 0 12 9.5Zm5.25-3.25a1.25 1.25 0 1 1-1.25 1.25 1.25 1.25 0 0 1 1.25-1.25Z" />
           </svg>
         </a>
-      </div>
+      </nav>
 
       <p>Davi De Oliveira Costa - Sistemas Computacionais &copy; 2026 MoreSpaces. Todos os direitos reservados.</p>
     </footer>

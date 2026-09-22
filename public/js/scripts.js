@@ -1,4 +1,19 @@
 /**
+ * scripts.js — Script único da versão DINÂMICA da MoreSpaces (Laravel).
+ *
+ * Contraste com o site.js da versão estática: aqui NÃO existe simulação
+ * de sessão via localStorage nem envio simulado de formulários — tudo
+ * isso é responsabilidade do HomeController no servidor. O Blade já
+ * renderiza o HTML certo para cada estado (@if($isAuthenticated),
+ * @if($isSpacesUser)), e os <form> fazem POST de verdade para as rotas
+ * do Laravel. Por isso este arquivo é bem mais enxuto: cuida apenas de
+ * comportamentos puramente visuais que independem de back-end — o menu
+ * mobile, a navegação suave com destaque de seção ativa (scrollspy) e o
+ * carrossel de FAQ — os únicos três recursos que, de fato, se repetem
+ * de forma idêntica nas duas versões do projeto.
+ */
+
+/**
  * Inicializa o carrossel de perguntas frequentes (FAQ).
  *
  * Procura o container marcado com [data-faq-carousel] e, se ainda não

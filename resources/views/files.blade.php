@@ -23,7 +23,7 @@
       @endif
       @if ($isSpacesUser)<a href="{{ route('files') }}" aria-current="page">Arquivos</a>@endif
       @if ($isAuthenticated)
-      <form class="logout-form" action="{{ route('logout') }}" method="POST">@csrf<button type="submit">Sair</button></form>
+      <form class="logout-form" action="{{ route('logout') }}" method="POST"><input type="hidden" name="_token" value="{{ csrf_token() }}"><button type="submit">Sair</button></form>
       @endif
     </nav>
   </header>

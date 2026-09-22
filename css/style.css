@@ -405,10 +405,21 @@ button:hover {
 
 .form-message {
   margin: 0;
-  padding: 14px 20px;
+  max-height: 0;
+  padding: 0 20px;
+  overflow: hidden;
   font-weight: 700;
   text-align: center;
-  background: var(--surface);
+  background: transparent;
+  opacity: 0;
+  transition: opacity 220ms ease, max-height 220ms ease, padding 220ms ease;
+}
+
+.form-message.is-success,
+.form-message.is-error {
+  max-height: 120px;
+  padding: 14px 20px;
+  opacity: 1;
 }
 
 .form-message.is-success {
@@ -670,7 +681,7 @@ aside {
     padding-top: 78px;
   }
 
-  .form-message {
+  .flash-messages .form-message {
     padding-top: 96px;
   }
 
