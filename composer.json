@@ -10,6 +10,11 @@
       "App\\": "app/"
     }
   },
+  "autoload-dev": {
+    "psr-4": {
+      "Database\\": "database/"
+    }
+  },
   "scripts": {
     "post-autoload-dump": [
       "@php artisan package:discover --ansi"
