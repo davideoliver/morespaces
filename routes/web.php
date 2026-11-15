@@ -4,7 +4,6 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ContactController;
 use App\Http\Controllers\FilesController;
 use App\Http\Controllers\HomeController;
-use Illuminate\Foundation\Http\Middleware\ValidateCsrfToken;
 use Illuminate\Support\Facades\Route;
 
 /**
@@ -22,7 +21,7 @@ Route::get('/', [HomeController::class, 'index'])->name('home');
 
 // Recebe o formulário de contato da seção #contact.
 Route::post('/enviar', [ContactController::class, 'store'])
-    ->middleware(['throttle:contact', ValidateCsrfToken::class])
+    ->middleware(['throttle:contact'])
     ->name('contact');
 
 Route::get('/admin/mensagens', [ContactController::class, 'index'])
@@ -31,21 +30,21 @@ Route::get('/admin/mensagens', [ContactController::class, 'index'])
 
 // Recebe o formulário de login da seção #login.
 Route::post('/login', [AuthController::class, 'login'])
-    ->middleware(['guest', 'throttle:login', ValidateCsrfToken::class])
+    ->middleware(['guest', 'throttle:login'])
     ->name('login');
 
 // Recebe o formulário de cadastro da seção #register.
 Route::post('/cadastro', [AuthController::class, 'register'])
-    ->middleware(['guest', 'throttle:register', ValidateCsrfToken::class])
+    ->middleware(['guest', 'throttle:register'])
     ->name('register');
 
 // Encerra a sessão do usuário autenticado.
 Route::post('/logout', [AuthController::class, 'logout'])
-    ->middleware(['auth', ValidateCsrfToken::class])
+    ->middleware(['auth'])
     ->name('logout');
 
 // Lista os níveis disponíveis na área restrita de Arquivos (M.G.E).
-Route::middleware(['auth', 'role:agent,admin', ValidateCsrfToken::class])->group(function (): void {
+Route::middleware(['auth', 'role:agent,admin'])->group(function (): void {
     Route::get('/arquivos', [FilesController::class, 'index'])->name('files.index');
     Route::get('/arquivos/novo', [FilesController::class, 'create'])->name('files.create');
     Route::post('/arquivos', [FilesController::class, 'store'])->name('files.store');
