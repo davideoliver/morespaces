@@ -34,6 +34,8 @@ return Application::configure(basePath: dirname(__DIR__))
         // Registra o arquivo de rotas HTTP (web.php) usado por todo
         // o site (Home, Contato, Login, Cadastro, Arquivos etc.).
         web: __DIR__.'/../routes/web.php',
+        api: __DIR__.'/../routes/api.php',
+        apiPrefix: 'api',
         // Registra os comandos Artisan customizados (console.php).
         commands: __DIR__.'/../routes/console.php',
         // Endpoint padrão de "health check" do Laravel, útil para
