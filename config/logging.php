@@ -7,7 +7,7 @@ return [
     'channels' => [
         'stack' => [
             'driver' => 'stack',
-            'channels' => explode(',', (string) env('LOG_STACK', 'single')),
+            'channels' => explode(',', (string) env('LOG_STACK', 'daily')),
             'ignore_exceptions' => false,
         ],
         'daily' => [
@@ -16,6 +16,9 @@ return [
             'level' => env('LOG_LEVEL', 'debug'),
             'days' => (int) env('LOG_DAILY_DAYS', 14),
             'replace_placeholders' => true,
+            'processors' => [
+                App\Logging\RequestContextProcessor::class,
+            ],
         ],
     ],
 ];

@@ -9,7 +9,6 @@ use App\Models\User;
 use App\Repositories\UserRepository;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Log;
 
 class AuthService
 {
@@ -29,8 +28,6 @@ class AuthService
         $user->role = Role::Member;
         $user->save();
 
-        Log::info('Usuário criado', ['user_id' => $user->id, 'username' => $user->username]);
-
         return $user;
     }
 
@@ -40,12 +37,6 @@ class AuthService
             'username' => trim($username),
             'password' => $password,
         ]);
-
-        if ($authenticated) {
-            Log::info('Login realizado', ['user_id' => Auth::id(), 'username' => trim($username)]);
-        } else {
-            Log::warning('Falha no login', ['username' => trim($username)]);
-        }
 
         return $authenticated;
     }

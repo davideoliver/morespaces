@@ -8,6 +8,7 @@ use App\Exceptions\DuplicateLevelNumberException;
 use App\Models\Level;
 use App\Models\User;
 use App\Repositories\LevelRepository;
+use Illuminate\Support\Facades\Log;
 
 class LevelService
 {
@@ -30,7 +31,14 @@ class LevelService
             throw new DuplicateLevelNumberException;
         }
 
-        return $this->levels->create($this->attributes($data, (int) $number, $user));
+        $level = $this->levels->create($this->attributes($data, (int) $number, $user));
+
+        Log::info('level.created', [
+            'level_id' => $level->getKey(),
+            'user_id' => $user->getAuthIdentifier(),
+        ]);
+
+        return $level;
     }
 
     /** @param array<string, mixed> $data */

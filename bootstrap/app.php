@@ -4,6 +4,7 @@ use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
 use App\Http\Middleware\EnsureRole;
+use App\Http\Middleware\AddLogContext;
 use App\Exceptions\DuplicateLevelNumberException;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Auth\AuthenticationException;
@@ -12,6 +13,7 @@ use Illuminate\Http\Exceptions\ThrottleRequestsException;
 use Illuminate\Http\Request;
 use Illuminate\Session\TokenMismatchException;
 use Illuminate\Validation\ValidationException;
+use Illuminate\Support\Facades\Log;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\HttpKernel\Exception\MethodNotAllowedHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
@@ -43,6 +45,7 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware): void {
+        $middleware->append(AddLogContext::class);
         $middleware->alias([
             'role' => EnsureRole::class,
         ]);
@@ -54,6 +57,20 @@ return Application::configure(basePath: dirname(__DIR__))
         );
     })
     ->withExceptions(function (Exceptions $exceptions): void {
+        $exceptions->report(function (\Throwable $exception): void {
+            $request = request();
+
+            if ($exception instanceof HttpExceptionInterface && $exception->getStatusCode() < 500) {
+                return;
+            }
+
+            Log::error('internal.error', [
+                'user_id' => $request->user()?->getAuthIdentifier(),
+                'url' => $request->fullUrl(),
+                'exception' => $exception::class,
+            ]);
+        });
+
         $exceptions->render(function (\Throwable $exception, Request $request) {
             $isJsonRequest = $request->is('api/*') || $request->expectsJson();
 
