@@ -11,7 +11,7 @@
 <section id="{{ $sectionId }}" class="auth-section" style="{{ $sectionStyle }}">
   @if ($imageFirst)
   <figure class="auth-figure {{ $figureClass }}">
-    <img src="{{ asset('public/imgs/'.$image) }}?v={{ filemtime(public_path('imgs/'.$image)) }}" alt="{{ $imageAlt }}">
+    <img src="{{ asset((request()->getBaseUrl() === '' ? '' : 'public/').'imgs/'.$image) }}?v={{ filemtime(public_path('imgs/'.$image)) }}" alt="{{ $imageAlt }}">
     <figcaption>{{ $caption }}</figcaption>
   </figure>
   @endif
@@ -20,7 +20,7 @@
   </div>
   @unless ($imageFirst)
   <figure class="auth-figure {{ $figureClass }}">
-    <img src="{{ asset('public/imgs/'.$image) }}?v={{ filemtime(public_path('imgs/'.$image)) }}" alt="{{ $imageAlt }}">
+    <img src="{{ asset((request()->getBaseUrl() === '' ? '' : 'public/').'imgs/'.$image) }}?v={{ filemtime(public_path('imgs/'.$image)) }}" alt="{{ $imageAlt }}">
     <figcaption>{{ $caption }}</figcaption>
   </figure>
   @endunless

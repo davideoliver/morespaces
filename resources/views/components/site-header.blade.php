@@ -4,7 +4,7 @@
 
 <header class="site-header">
   <a class="brand" href="{{ route('home') }}#home" aria-label="MoreSpaces - Home">
-    <img class="brand-mark" src="{{ asset('public/imgs/mswhite.png') }}" alt="MoreSpaces Logo" aria-hidden="true">
+    <img class="brand-mark" src="{{ asset((request()->getBaseUrl() === '' ? '' : 'public/').'imgs/mswhite.png') }}" alt="MoreSpaces Logo" aria-hidden="true">
   </a>
   <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="main-navigation">
     <span class="menu-toggle__label">Menu</span>

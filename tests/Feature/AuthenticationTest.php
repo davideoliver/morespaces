@@ -7,6 +7,7 @@ namespace Tests\Feature;
 use App\Enums\Role;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Tests\TestCase;
@@ -99,6 +100,18 @@ class AuthenticationTest extends TestCase
             'password' => 'senha_errada',
         ])->assertSessionHasErrors(['username' => 'Credenciais inválidas']);
         $this->assertFalse(Auth::check());
+    }
+
+    public function test_malformed_legacy_password_is_rejected_without_server_error(): void
+    {
+        $user = User::factory()->create(['username' => 'legacy_user']);
+        DB::table('users')->where('id', $user->id)->update(['password' => 'legacy-password']);
+
+        $this->from(route('home'))->post(route('login'), [
+            'username' => 'legacy_user',
+            'password' => 'legacy-password',
+        ])->assertRedirect(route('home').'#login')
+            ->assertSessionHasErrors(['username' => 'Credenciais inválidas']);
     }
 
     public function test_logout_ends_the_session_and_guests_are_redirected(): void

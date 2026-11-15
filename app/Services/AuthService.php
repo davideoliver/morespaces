@@ -9,6 +9,7 @@ use App\Models\User;
 use App\Repositories\UserRepository;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use RuntimeException;
 
 class AuthService
 {
@@ -33,10 +34,18 @@ class AuthService
 
     public function attempt(string $username, string $password): bool
     {
-        $authenticated = Auth::attempt([
-            'username' => trim($username),
-            'password' => $password,
-        ]);
+        try {
+            $authenticated = Auth::attempt([
+                'username' => trim($username),
+                'password' => $password,
+            ]);
+        } catch (RuntimeException $exception) {
+            if ($exception->getMessage() !== 'This password does not use the Bcrypt algorithm.') {
+                throw $exception;
+            }
+
+            return false;
+        }
 
         return $authenticated;
     }
