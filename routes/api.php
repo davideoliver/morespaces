@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 use App\Http\Controllers\Api\V1\LevelController;
+use Illuminate\Foundation\Http\Middleware\ValidateCsrfToken;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -12,7 +13,7 @@ use Illuminate\Support\Facades\Route;
  * O middleware web é intencional: sessão e proteção CSRF também se aplicam a
  * /api/*; essas rotas não são isentas de CSRF.
  */
-Route::middleware(['web', 'auth', 'throttle:api'])->group(function (): void {
+Route::middleware(['web', 'auth', 'throttle:api', ValidateCsrfToken::class])->group(function (): void {
     Route::get('/v1/me', [LevelController::class, 'me'])->name('api.v1.me');
 
     Route::get('/v1/levels', [LevelController::class, 'index'])

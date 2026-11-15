@@ -3,6 +3,7 @@
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
+use Illuminate\Foundation\Http\Middleware\ValidateCsrfToken;
 use App\Http\Middleware\EnsureRole;
 use App\Http\Middleware\AddLogContext;
 use App\Http\Middleware\SecurityHeaders;
@@ -46,6 +47,9 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware): void {
+        $middleware->web(append: [
+            ValidateCsrfToken::class,
+        ]);
         $middleware->append(SecurityHeaders::class);
         $middleware->append(AddLogContext::class);
         $middleware->alias([
@@ -128,7 +132,10 @@ return Application::configure(basePath: dirname(__DIR__))
                 $error = 'method_not_allowed';
                 $message = 'O método HTTP utilizado não é permitido neste recurso.';
                 $errors = null;
-            } elseif ($exception instanceof TokenMismatchException) {
+            } elseif (
+                $exception instanceof TokenMismatchException
+                || ($exception instanceof HttpExceptionInterface && $exception->getStatusCode() === 419)
+            ) {
                 $status = 419;
                 $error = 'csrf_token_mismatch';
                 $message = 'A sessão expirou. Atualize a página e tente novamente.';
