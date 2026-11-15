@@ -56,7 +56,11 @@ return Application::configure(basePath: dirname(__DIR__))
             $isJsonRequest = $request->is('api/*') || $request->expectsJson();
 
             if ($exception instanceof ValidationException && ! $isJsonRequest) {
-                $section = $request->routeIs('register') ? 'register' : 'login';
+                $section = match (true) {
+                    $request->routeIs('register') => 'register',
+                    $request->routeIs('contact') => 'contact',
+                    default => 'login',
+                };
 
                 return redirect()->to(route('home').'#'.$section)
                     ->withErrors($exception->errors())

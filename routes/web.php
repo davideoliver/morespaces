@@ -20,7 +20,13 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', [HomeController::class, 'index'])->name('home');
 
 // Recebe o formulário de contato da seção #contact.
-Route::post('/enviar', [ContactController::class, 'store'])->name('contact');
+Route::post('/enviar', [ContactController::class, 'store'])
+    ->middleware('throttle:contact')
+    ->name('contact');
+
+Route::get('/admin/mensagens', [ContactController::class, 'index'])
+    ->middleware(['auth', 'can:viewAny,App\Models\ContactMessage'])
+    ->name('admin.messages');
 
 // Recebe o formulário de login da seção #login.
 Route::post('/login', [AuthController::class, 'login'])

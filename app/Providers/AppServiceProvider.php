@@ -38,5 +38,9 @@ class AppServiceProvider extends ServiceProvider
                 Str::lower((string) $request->input('username')).'|'.$request->ip()
             );
         });
+
+        RateLimiter::for('contact', function (Request $request): Limit {
+            return Limit::perMinute(3)->by($request->ip());
+        });
     }
 }

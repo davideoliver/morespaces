@@ -28,6 +28,9 @@
     @can('viewAny', \App\Models\Level::class)
     <a href="{{ route('files') }}" @if ($filesPage) aria-current="page" @endif>Arquivos</a>
     @endcan
+    @can('viewAny', \App\Models\ContactMessage::class)
+    <a href="{{ route('admin.messages') }}">Mensagens</a>
+    @endcan
     <form class="logout-form" action="{{ route('logout') }}" method="POST"><input type="hidden" name="_token" value="{{ csrf_token() }}"><button type="submit">Sair</button></form>
     @endauth
   </nav>

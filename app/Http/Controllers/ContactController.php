@@ -4,22 +4,38 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\ContactRequest;
+use App\Models\ContactMessage;
+use App\Services\ContactService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Gate;
+use Illuminate\View\View;
 
 /**
  * Controla o formulário de contato demonstrativo.
  */
 class ContactController extends Controller
 {
-    public function store(Request $request): RedirectResponse
-    {
-        $request->validate([
-            'nome' => ['required', 'string', 'max:120'],
-            'contatoEmail' => ['required', 'email', 'max:255'],
-            'mensagem' => ['required', 'string', 'max:2000'],
-        ]);
+    public function __construct(
+        private readonly ContactService $contacts,
+    ) {
+    }
 
-        return back()->with('success', 'Mensagem enviada com sucesso!');
+    public function store(ContactRequest $request): RedirectResponse
+    {
+        $this->contacts->create($request->validated(), $request->user());
+
+        return redirect()->to(route('home').'#contact')
+            ->with('success', 'Mensagem enviada com sucesso!');
+    }
+
+    public function index(): View
+    {
+        Gate::authorize('viewAny', ContactMessage::class);
+
+        return view('admin.messages', [
+            'messages' => $this->contacts->paginate(),
+        ]);
     }
 }
