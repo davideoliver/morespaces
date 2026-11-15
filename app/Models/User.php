@@ -21,6 +21,11 @@ class User extends Authenticatable
         'password',
     ];
 
+    public function hasRole(Role ...$roles): bool
+    {
+        return $this->role !== null && in_array($this->role, $roles, true);
+    }
+
     protected function casts(): array
     {
         return [

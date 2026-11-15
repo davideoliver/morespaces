@@ -36,7 +36,9 @@ Route::post('/cadastro', [AuthController::class, 'register'])
 Route::post('/logout', [AuthController::class, 'logout'])->middleware('auth')->name('logout');
 
 // Lista os níveis disponíveis na área restrita de Arquivos (M.G.E).
-Route::get('/arquivos', [FilesController::class, 'index'])->middleware('auth')->name('files');
+Route::get('/arquivos', [FilesController::class, 'index'])
+    ->middleware(['auth', 'role:agent,admin'])
+    ->name('files');
 
 // Exibe o conteúdo de um nível específico de arquivo.
 // ->whereNumber('level') garante, via expressão regular da rota, que
@@ -44,5 +46,5 @@ Route::get('/arquivos', [FilesController::class, 'index'])->middleware('auth')->
 // coisa (ex.: /arquivos/abc) já resulta em 404 antes mesmo do controller.
 Route::get('/arquivos/{level}', [FilesController::class, 'show'])
     ->whereNumber('level')
-    ->middleware('auth')
+    ->middleware(['auth', 'role:agent,admin'])
     ->name('files.level');
