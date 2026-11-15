@@ -14,6 +14,9 @@ use Illuminate\Foundation\Configuration\Middleware;
  * app/Exceptions/Handler.php das versões anteriores do Laravel.
  */
 return Application::configure(basePath: dirname(__DIR__))
+    ->withProviders([
+        App\Providers\AppServiceProvider::class,
+    ])
     ->withRouting(
         // Registra o arquivo de rotas HTTP (web.php) usado por todo
         // o site (Home, Contato, Login, Cadastro, Arquivos etc.).
