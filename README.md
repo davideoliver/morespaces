@@ -1,5 +1,7 @@
 # MoreSpaces
 
+[![Testes](https://github.com/davideoliver/morespaces/actions/workflows/tests.yml/badge.svg)](https://github.com/davideoliver/morespaces/actions/workflows/tests.yml)
+
 Site institucional da MoreSpaces desenvolvido em **Laravel** (arquitetura **MVC**), com uma landing page completa (Home, Sobre, FAQ, Contato), um fluxo simplificado de autenticação por sessão (Login / Cadastro / Logout) e uma área restrita de "Arquivos" (M.G.E) liberada apenas para usuários identificados como *Spaces User*.
 
 > Autor: Davi De Oliveira Costa — Sistemas Computacionais

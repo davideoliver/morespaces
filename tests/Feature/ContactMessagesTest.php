@@ -60,6 +60,20 @@ class ContactMessagesTest extends TestCase
         $this->assertDatabaseCount('contact_messages', 0);
     }
 
+    public function test_contact_rejects_missing_name_and_overlong_message(): void
+    {
+        $this->from(route('home').'#contact')
+            ->post(route('contact'), [
+                'nome' => '',
+                'contatoEmail' => 'visitante@example.com',
+                'mensagem' => str_repeat('M', 5001),
+            ])
+            ->assertRedirect(route('home').'#contact')
+            ->assertSessionHasErrors(['nome', 'mensagem']);
+
+        $this->assertDatabaseCount('contact_messages', 0);
+    }
+
     public function test_only_admins_can_read_contact_messages(): void
     {
         $this->actingAs(User::factory()->member()->create())

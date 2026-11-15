@@ -78,6 +78,21 @@ class ApiLevelsTest extends TestCase
             ->assertJsonPath('error', 'not_found');
     }
 
+    public function test_api_rejects_duplicate_numbers_and_invalid_enum_values(): void
+    {
+        $admin = User::factory()->admin()->create();
+        Level::factory()->create(['number' => 123]);
+
+        $this->actingAs($admin)->postJson('/api/v1/levels', [
+            'number' => 123,
+            'name' => 'Nível inválido',
+            'description' => 'Descrição válida.',
+            'danger_level' => 'unknown',
+        ])->assertUnprocessable()
+            ->assertJsonPath('error', 'validation_error')
+            ->assertJsonStructure(['errors' => ['number', 'danger_level']]);
+    }
+
     public function test_level_index_includes_pagination_meta_and_searches(): void
     {
         $agent = User::factory()->agent()->create();

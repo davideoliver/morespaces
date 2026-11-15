@@ -51,6 +51,24 @@ class AuthenticationTest extends TestCase
         ])->assertSessionHasErrors('username');
     }
 
+    public function test_registration_rejects_missing_and_malformed_input(): void
+    {
+        $this->from(route('home'))->post(route('register'), [
+            'name' => '',
+            'username' => 'nome com espaços',
+            'password' => '',
+            'password_confirmation' => 'diferente',
+        ])->assertSessionHasErrors(['name', 'username', 'password']);
+    }
+
+    public function test_login_rejects_missing_credentials(): void
+    {
+        $this->from(route('home'))->post(route('login'), [])
+            ->assertSessionHasErrors(['username', 'password']);
+
+        $this->assertGuest();
+    }
+
     public function test_registration_cannot_escalate_role(): void
     {
         $this->post(route('register'), [

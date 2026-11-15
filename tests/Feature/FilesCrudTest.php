@@ -55,6 +55,31 @@ class FilesCrudTest extends TestCase
         ])->assertSessionHasErrors(['number', 'name', 'description', 'danger_level']);
     }
 
+    public function test_duplicate_level_number_is_rejected(): void
+    {
+        $admin = User::factory()->admin()->create();
+        Level::factory()->create(['number' => 42]);
+
+        $this->actingAs($admin)->post(route('files.store'), [
+        'number' => 42,
+        'name' => 'Nível duplicado',
+        'description' => 'Descrição válida.',
+        'danger_level' => DangerLevel::Low->value,
+        ])->assertSessionHasErrors('number');
+    }
+
+    public function test_payload_over_limits_is_rejected(): void
+    {
+        $admin = User::factory()->admin()->create();
+
+        $this->actingAs($admin)->post(route('files.store'), [
+        'name' => str_repeat('N', 121),
+        'summary' => str_repeat('S', 256),
+        'description' => str_repeat('D', 5001),
+        'danger_level' => DangerLevel::Low->value,
+        ])->assertSessionHasErrors(['name', 'summary', 'description']);
+    }
+
     public function test_agent_can_view_but_cannot_mutate_levels(): void
     {
         $agent = User::factory()->agent()->create();
