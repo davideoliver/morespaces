@@ -2,130 +2,142 @@
 
 [![Testes](https://github.com/davideoliver/morespaces/actions/workflows/tests.yml/badge.svg)](https://github.com/davideoliver/morespaces/actions/workflows/tests.yml)
 
-Site institucional da MoreSpaces desenvolvido em **Laravel** (arquitetura **MVC**), com uma landing page completa (Home, Sobre, FAQ, Contato), um fluxo simplificado de autenticação por sessão (Login / Cadastro / Logout) e uma área restrita de "Arquivos" (M.G.E) liberada apenas para usuários identificados como *Spaces User*.
+MoreSpaces é um site acadêmico sobre exploração de níveis fictícios no estilo
+Backrooms. A aplicação oferece uma landing page pública, autenticação por
+sessão, uma área protegida de arquivos (M.G.E), CRUD de níveis e uma API JSON
+para os mesmos serviços. O projeto foi desenvolvido para a disciplina
+**Sistemas Computacionais**.
 
-> Autor: Davi De Oliveira Costa — Sistemas Computacionais
+## Stack
 
----
+- PHP 8.2+
+- Laravel 12
+- Blade, HTML, CSS e JavaScript estáticos
+- MySQL/MariaDB para desenvolvimento com XAMPP
+- SQLite em memória para os testes
+- PHPUnit 11 via `php artisan test`
 
-## 🧱 Estrutura do projeto
+## Requisitos
 
-```
-app/
-  Http/
-    Controllers/
-      Controller.php        # Controller base abstrato
-      HomeController.php    # Toda a lógica de rotas do site
-bootstrap/
-  app.php                   # Bootstrap da aplicação (rotas, middlewares, exceções)
-public/
-  index.php                 # Front controller (ponto de entrada HTTP)
-  css/style.css             # Estilos globais do site
-  js/scripts.js             # Menu mobile, scroll spy, carrossel de FAQ, validações
-resources/
-  views/
-    layouts/app.blade.php   # Layout HTML base (head, css, js)
-    home.blade.php          # Página inicial (Home/Sobre/FAQ/Contato/Login/Cadastro)
-    files/
-      files.blade.php       # Listagem de níveis de arquivos (M.G.E)
-      not-found.blade.php   # Página de nível de arquivo ainda não disponível
-routes/
-  web.php                   # Rotas HTTP da aplicação
-  console.php               # Comandos Artisan customizados
-```
+- Windows com [XAMPP](https://www.apachefriends.org/) (Apache e MySQL
+  disponíveis)
+- PHP 8.2+ com `mbstring`, `openssl`, `pdo_mysql`, `pdo_sqlite`, `tokenizer`,
+  `xml`, `ctype` e `json`
+- [Composer](https://getcomposer.org/)
+- Git (opcional, para clonar o repositório)
 
----
+O Node.js não é necessário para executar esta versão: os arquivos CSS e
+JavaScript usados pelo site já ficam em `public/`.
 
-## ✅ Pré-requisitos
+## Instalação no Windows/XAMPP
 
-- **PHP** 8.2 ou superior
-- **Composer** (gerenciador de dependências do PHP)
-- Extensões PHP padrão do Laravel (`mbstring`, `openssl`, `pdo`, `tokenizer`, `xml`, `ctype`, `json`)
-- Node.js (opcional — só é necessário caso deseje usar um bundler como Vite; o projeto atual referencia `css` e `js` já compilados/estáticos em `public/`)
+Execute os comandos a partir da raiz do projeto (`C:\xampp\htdocs\morespaces`).
 
----
+### 1. Inicie o XAMPP
 
-## ⚙️ Configuração
+Abra o painel do XAMPP e inicie **Apache** e **MySQL**.
 
-Com o MySQL/MariaDB do XAMPP em execução, crie o banco:
+### 2. Crie o banco
+
+No phpMyAdmin ou no console do MySQL, execute:
 
 ```sql
-CREATE DATABASE morespaces CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+CREATE DATABASE morespaces
+  CHARACTER SET utf8mb4
+  COLLATE utf8mb4_unicode_ci;
 ```
 
-Na raiz do projeto, instale as dependências e gere o ambiente local:
+### 3. Instale as dependências e crie o ambiente
 
-```bash
+```powershell
 composer install
-cp .env.example .env
+Copy-Item .env.example .env
 php artisan key:generate
-php artisan migrate
 ```
 
-No Windows PowerShell, use `Copy-Item .env.example .env` no lugar de `cp`.
+Abra `.env` e confirme `DB_DATABASE=morespaces`, `DB_USERNAME=root` e a senha
+do MySQL local. A configuração padrão do XAMPP usa usuário `root` sem senha.
+Se o MySQL local exigir senha, altere apenas o `.env`; nunca publique esse
+arquivo.
 
-O `.env` aponta para MySQL em `127.0.0.1:3306`, banco `morespaces`, usuário
-`root` e senha vazia, conforme a configuração padrão do XAMPP. Nunca inclua
-credenciais reais no repositório.
+Antes de semear, defina no `.env` um usuário e uma senha locais para a conta
+administradora:
 
-Confirme a configuração carregada pelo Laravel:
-
-```bash
-php artisan about
+```dotenv
+SEED_ADMIN_USERNAME=admin_local
+SEED_ADMIN_PASSWORD=troque-esta-senha-local
 ```
 
-O relatório deve indicar o driver de banco `mysql`.
+### 4. Execute migrations e seeders
 
-## 🚀 Passo a passo para rodar o projeto
+```powershell
+php artisan migrate --seed
+```
 
-### 1. Subir o servidor de desenvolvimento
+Esse comando cria usuários, níveis e sessões. Os dados de demonstração são:
 
-```bash
+| Usuário | Papel | Uso |
+|---|---|---|
+| valor de `SEED_ADMIN_USERNAME` | `admin` | CRUD de níveis e mensagens |
+| `demo_agent` | `agent` | visualizar e pesquisar níveis |
+| `demo_member` | `member` | testar acesso sem permissão à área M.G.E |
+
+As credenciais do administrador são somente as definidas no seu `.env`. As
+contas `demo_*` são contas locais de demonstração criadas pelo seeder; não use
+essas contas em produção nem reutilize senhas reais.
+
+### 5. Inicie o site
+
+```powershell
 php artisan serve
 ```
 
-Por padrão o site ficará disponível em:
+Abra <http://127.0.0.1:8000>. Para confirmar as rotas registradas:
 
+```powershell
+php artisan route:list
 ```
-http://127.0.0.1:8000
+
+### 6. Execute os testes
+
+Os testes usam SQLite em memória e não alteram o banco MySQL local:
+
+```powershell
+php artisan test
 ```
 
----
+## Estrutura
 
-## 🗺️ Rotas disponíveis
+```text
+app/
+  Http/Controllers/       Entrada HTTP e respostas
+  Http/Requests/          Validação de entrada
+  Http/Resources/         Formato das respostas JSON
+  Models/                 Entidades Eloquent
+  Policies/               Autorização por papel
+  Repositories/           Consultas e persistência
+  Services/               Regras de negócio e sanitização
+  Enums/                  Papéis e níveis de perigo
+bootstrap/app.php         Rotas, middleware e respostas de exceção
+config/                   Configuração baseada no .env
+database/                 Migrations, factories e seeders
+docs/                     Arquitetura, banco, API, permissões e testes
+public/                   Front controller, CSS, JS e imagens
+resources/views/          Templates Blade
+routes/                   Rotas web e API v1
+tests/                    Testes unitários e de integração
+```
 
-| Método | URI                 | Nome da rota   | Ação                                              |
-|--------|---------------------|----------------|----------------------------------------------------|
-| GET    | `/`                  | `home`         | Página inicial (landing page completa)             |
-| POST   | `/enviar`            | `contact`      | Envio do formulário de contato                     |
-| POST   | `/login`             | `login`        | Login simplificado (baseado em sessão)             |
-| POST   | `/cadastro`          | `register`     | Cadastro simplificado (sem persistência em banco)  |
-| POST   | `/logout`            | `logout`       | Logout / encerramento de sessão                    |
-| GET    | `/arquivos`          | `files`        | Lista os níveis da área restrita (M.G.E)           |
-| GET    | `/arquivos/{level}`  | `files.level`  | Exibe um nível específico (atualmente sempre 404)  |
+## Documentação
 
----
+- [Arquitetura](docs/ARCHITECTURE.md)
+- [Banco de dados](docs/DATABASE.md)
+- [API](docs/API.md)
+- [Permissões](docs/PERMISSIONS.md)
+- [Observabilidade](docs/OBSERVABILITY.md)
+- [Testes](docs/TESTING.md)
 
-## 🔐 Sobre a autenticação
+## Licença
 
-O login/cadastro **não usa** o sistema de autenticação nativo do Laravel (`Auth`) nem tabela de usuários no banco de dados — é um fluxo de demonstração:
-
-- Qualquer combinação válida de usuário/senha é aceita no login.
-- O `username` informado é apenas armazenado na sessão (`session('username')`).
-- Um usuário é considerado **"Spaces User"** (e ganha acesso à área de Arquivos) sempre que o texto `"spaces"` estiver contido no seu username (ex.: `moreSpacesAdmin`).
-
-Para testar a área de Arquivos, basta fazer login com um usuário cujo nome contenha `spaces`.
-
----
-
-## 🧩 Próximos passos sugeridos
-
-- Conectar a área de "Arquivos" (`/arquivos/{level}`) a um banco de dados real, criando o Model/Migration correspondente.
-- Substituir a autenticação simplificada por sessão pelo sistema de `Auth` nativo do Laravel (com tabela `users`, hashing de senha, etc.), caso o projeto avance para produção.
-- Persistir o formulário de contato (ex.: salvar em banco ou enviar e-mail via `Mail::send`).
-
----
-
-## 📄 Licença
-
-Projeto acadêmico/educacional desenvolvido para fins de estudo em Sistemas Computacionais. Todos os direitos reservados © 2026 MoreSpaces.
+Projeto acadêmico/educacional desenvolvido para fins de estudo em Sistemas
+Computacionais. Todos os direitos reservados © 2026 MoreSpaces.

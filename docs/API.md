@@ -63,7 +63,7 @@ ser expostos em produção.
 
 `GET /api/v1/levels` retorna `data` e os metadados do paginator Laravel:
 `current_page`, `last_page`, `per_page` e `total`. A implementação atual usa
-15 itens por página. O parâmetro `q` pesquisa em `name`, `summary` e
+9 itens por página por padrão (`LEVELS_PER_PAGE` no `.env`). O parâmetro `q` pesquisa em `name`, `summary` e
 `description`; `page` seleciona a página.
 
 ### Limite de requisições
@@ -141,7 +141,7 @@ curl.exe -sS -b $jar -H 'Accept: application/json' `
   "meta": {
     "current_page": 1,
     "last_page": 1,
-    "per_page": 15,
+    "per_page": 9,
     "total": 1
   }
 }

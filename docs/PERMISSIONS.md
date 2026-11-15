@@ -7,7 +7,7 @@ requisição sem usuário autenticado.
 |---|---:|---:|---:|---:|
 | `GET /` (home) | 200 | 200 | 200 | 200 |
 | `GET /arquivos` (`LevelPolicy@viewAny`) | 302 | 403 | 200 | 200 |
-| `GET /arquivos/{level}` (`LevelPolicy@view`) | 302 | 403 | 404* | 404* |
+| `GET /arquivos/{level}` (`LevelPolicy@view`) | 302 | 403 | 200** | 200** |
 | `LevelPolicy@create` | 403 | 403 | 403 | 200 |
 | `LevelPolicy@update` | 403 | 403 | 403 | 200 |
 | `LevelPolicy@delete` | 403 | 403 | 403 | 200 |
@@ -20,5 +20,6 @@ requisição sem usuário autenticado.
 representadas pelo resultado de autorização (`200` autorizado e `403`
 negado).
 
-`*` Agentes e administradores passam pela autorização, mas o nível fictício
-continua retornando `404`, pois ainda não há conteúdo persistido para ele.
+`**` Para um nível sem o número informado, o route model binding retorna `404`.
+Com os seeders executados, os níveis 0 a 3 existem e retornam `200` para
+agentes e administradores.

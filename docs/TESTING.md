@@ -3,7 +3,8 @@
 A suíte usa PHPUnit via `php artisan test`, com SQLite em memória e
 `RefreshDatabase` nos testes que acessam o banco. As migrations são executadas
 antes de cada teste, incluindo as colunas `role` e `danger_level` e seus casts
-para enums.
+para enums. O arquivo `phpunit.xml` configura `SESSION_DRIVER=array`, portanto
+os testes não dependem de um servidor MySQL.
 
 ## Matriz de cobertura
 
@@ -24,8 +25,7 @@ para enums.
 
 ```bash
 php artisan test
-php artisan test --testdox > docs/evidence/tests.txt
-git log --oneline --decorate --graph > docs/evidence/git-history.txt
+php artisan test
 ```
 
 O workflow [`tests.yml`](../.github/workflows/tests.yml) executa a mesma suíte

@@ -1,7 +1,8 @@
 # Banco de dados
 
 O banco usa as migrations do Laravel e mantém a sessão em banco. Senhas são
-armazenadas somente como hashes; o valor original nunca é persistido.
+armazenadas somente como hashes; o valor original nunca é persistido. Em
+produção, a aplicação deve usar credenciais definidas fora do repositório.
 
 ## Diagrama ER
 
@@ -93,9 +94,9 @@ erDiagram
 ## Índices
 
 - `users.username` (UNIQUE): impede contas duplicadas e acelera a busca de login.
-- `users.role`: acelera filtros por perfil e suporta autorização.
+- `users.role` (INDEX): acelera filtros por perfil e suporta autorização.
 - `levels.number` (UNIQUE): impede níveis repetidos e acelera consulta por número.
-- `levels.danger_level`: acelera filtros por classificação de risco.
-- `levels.created_by`: acelera consultas dos níveis criados por um usuário.
-- `contact_messages.created_at`: acelera listagens cronológicas e triagem.
+- `levels.danger_level` (INDEX): acelera filtros por classificação de risco.
+- `levels.created_by` (INDEX): acelera consultas dos níveis criados por um usuário.
+- `contact_messages.created_at` (INDEX): acelera listagens cronológicas e triagem.
 - `sessions.last_activity`: índice exigido pelo driver para localizar sessões antigas.
