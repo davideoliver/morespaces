@@ -6,6 +6,7 @@ namespace App\Repositories;
 
 use App\Models\Level;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Facades\DB;
 
 class EloquentLevelRepository implements LevelRepository
 {
@@ -16,11 +17,14 @@ class EloquentLevelRepository implements LevelRepository
         if ($search !== null && $search !== '') {
             $escapedSearch = addcslashes($search, '\\%_');
             $pattern = "%{$escapedSearch}%";
+            $escapeClause = DB::connection()->getDriverName() === 'mysql'
+                ? "ESCAPE '\\\\'"
+                : "ESCAPE '\\'";
 
-            $query->where(function ($query) use ($pattern): void {
-                $query->whereRaw("name LIKE ? ESCAPE '\\'", [$pattern])
-                    ->orWhereRaw("summary LIKE ? ESCAPE '\\'", [$pattern])
-                    ->orWhereRaw("description LIKE ? ESCAPE '\\'", [$pattern]);
+            $query->where(function ($query) use ($escapeClause, $pattern): void {
+                $query->whereRaw("name LIKE ? {$escapeClause}", [$pattern])
+                    ->orWhereRaw("summary LIKE ? {$escapeClause}", [$pattern])
+                    ->orWhereRaw("description LIKE ? {$escapeClause}", [$pattern]);
             });
         }
 
