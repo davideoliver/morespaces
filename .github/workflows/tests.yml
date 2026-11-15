@@ -25,6 +25,15 @@ jobs:
       - name: Generate development autoload
         run: composer dump-autoload --dev --optimize
 
+      - name: Prepare Laravel directories
+        run: |
+          mkdir -p storage/framework/cache
+          mkdir -p storage/framework/sessions
+          mkdir -p storage/framework/views
+          mkdir -p storage/framework/testing
+          mkdir -p storage/logs
+          mkdir -p bootstrap/cache
+
       - name: Configure application
         run: |
           cp .env.example .env
