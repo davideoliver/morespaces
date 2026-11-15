@@ -32,8 +32,6 @@ routes/
   console.php               # Comandos Artisan customizados
 ```
 
-> ⚠️ Este pacote de arquivos representa apenas as partes centrais da aplicação. Para rodar o projeto de verdade é necessário criar/gerar um projeto Laravel completo (com `vendor/`, `.env`, `artisan`, migrations etc.) e substituir os arquivos correspondentes pelos deste repositório, conforme os passos abaixo.
-
 ---
 
 ## ✅ Pré-requisitos
@@ -45,37 +43,40 @@ routes/
 
 ---
 
-## 🚀 Passo a passo para rodar o projeto
+## ⚙️ Configuração
 
-### 1. Criar o projeto Laravel (caso ainda não exista)
+Com o MySQL/MariaDB do XAMPP em execução, crie o banco:
 
-```bash
-composer create-project laravel/laravel morespaces
-cd morespaces
+```sql
+CREATE DATABASE morespaces CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 ```
 
-### 2. Copiar os arquivos deste pacote para o projeto
-
-Copie cada arquivo para o caminho equivalente dentro do projeto Laravel recém-criado, respeitando a estrutura mostrada acima (ex.: `HomeController.php` vai para `app/Http/Controllers/HomeController.php`, `web.php` vai para `routes/web.php`, e assim por diante).
-
-Os assets estáticos referenciados nas views (`public/imgs/mswhite.png`, `public/imgs/backroomshd.webp`, `public/imgs/parking.webp`, `public/imgs/pipes.webp`, `public/imgs/eletricstation.webp` e os favicons em `public/imgs/favcons/`) também precisam existir dentro de `public/` para que as imagens do site apareçam corretamente.
-
-### 3. Instalar as dependências PHP
+Na raiz do projeto, instale as dependências e gere o ambiente local:
 
 ```bash
 composer install
-```
-
-### 4. Configurar o arquivo de ambiente
-
-```bash
 cp .env.example .env
 php artisan key:generate
+php artisan migrate
 ```
 
-O arquivo `.env` controla configurações como nome da aplicação, URL, driver de sessão e de banco de dados. Para este projeto (que ainda não usa banco de dados — nem para usuários, nem para os "Arquivos"), a configuração padrão de `.env.example` já é suficiente para subir o site.
+No Windows PowerShell, use `Copy-Item .env.example .env` no lugar de `cp`.
 
-### 5. Subir o servidor de desenvolvimento
+O `.env` aponta para MySQL em `127.0.0.1:3306`, banco `morespaces`, usuário
+`root` e senha vazia, conforme a configuração padrão do XAMPP. Nunca inclua
+credenciais reais no repositório.
+
+Confirme a configuração carregada pelo Laravel:
+
+```bash
+php artisan about
+```
+
+O relatório deve indicar o driver de banco `mysql`.
+
+## 🚀 Passo a passo para rodar o projeto
+
+### 1. Subir o servidor de desenvolvimento
 
 ```bash
 php artisan serve

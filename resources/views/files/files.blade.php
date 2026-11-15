@@ -51,7 +51,7 @@
         <h2 id="files-levels-title">Níveis disponíveis</h2>
       </header>
       <div class="files-level-grid">
-        {{-- $levels vem de range(0, 4) no HomeController::files();
+        {{-- $levels vem da configuração LEVELS_PER_PAGE;
              cada card gera um link para /arquivos/{level}. --}}
         @foreach ($levels as $level)
         <a class="files-level-link" href="{{ route('files.level', ['level' => $level]) }}">

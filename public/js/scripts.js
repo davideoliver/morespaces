@@ -188,31 +188,35 @@ const initializePage = () => {
 
   // Validação client-side de demonstração para o formulário de login
   // (o formulário real do HTML usa action/method para POST no
-  // servidor; este listener é apenas um feedback visual extra caso
-  // exista um elemento #loginForm na página).
+  // servidor; o envio só é interrompido quando a validação falha).
   loginForm?.addEventListener('submit', (event) => {
-    event.preventDefault();
     const username = document.getElementById('loginUsername').value.trim();
     const password = document.getElementById('loginPassword').value;
     const message = document.getElementById('loginMessage');
+    const isValid = Boolean(username && password);
 
-    message.textContent = username && password ? 'Login realizado com sucesso!' : 'Preencha usuário e senha.';
-    message.className = `form-message ${username && password ? 'is-success' : 'is-error'}`;
+    if (!isValid) {
+      event.preventDefault();
+      message.textContent = 'Preencha usuário e senha.';
+      message.className = 'form-message is-error';
+    }
   });
 
   // Mesma ideia para o cadastro: validação simples de preenchimento
   // e tamanho mínimo de senha, apenas para feedback imediato ao usuário.
   registerForm?.addEventListener('submit', (event) => {
-    event.preventDefault();
     const name = document.getElementById('registerName').value.trim();
     const rg = document.getElementById('registerRg').value.trim();
     const username = document.getElementById('registerUsername').value.trim();
     const password = document.getElementById('registerPassword').value;
     const message = document.getElementById('registerMessage');
-    const isValid = name && rg && username && password.length >= 8;
+    const isValid = Boolean(name && rg && username && password.length >= 8);
 
-    message.textContent = isValid ? 'Cadastro realizado com sucesso!' : 'Preencha todos os campos e use uma senha com no mínimo 8 caracteres.';
-    message.className = `form-message ${isValid ? 'is-success' : 'is-error'}`;
+    if (!isValid) {
+      event.preventDefault();
+      message.textContent = 'Preencha todos os campos e use uma senha com no mínimo 8 caracteres.';
+      message.className = 'form-message is-error';
+    }
   });
 
   initializeCarousel();

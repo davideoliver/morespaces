@@ -132,8 +132,7 @@ class HomeController extends Controller
         return view('files', [
             'isAuthenticated' => $this->isAuthenticated(),
             'isSpacesUser' => $this->isSpacesUser(),
-            // range(0, 4) gera os 5 níveis exibidos nos cards da grade.
-            'levels' => range(0, 4),
+            'levels' => range(0, config('morespaces.levels_per_page', 9) - 1),
         ]);
     }
 
