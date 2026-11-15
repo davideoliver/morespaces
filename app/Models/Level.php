@@ -19,7 +19,6 @@ class Level extends Model
         'summary',
         'description',
         'danger_level',
-        'created_by',
     ];
 
     protected function casts(): array

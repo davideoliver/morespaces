@@ -184,6 +184,13 @@ const initializePage = () => {
 
   const loginForm = document.getElementById('loginForm');
   const registerForm = document.getElementById('registerForm');
+  document.querySelectorAll('form[data-confirm]').forEach((form) => {
+    form.addEventListener('submit', (event) => {
+      if (!window.confirm(form.dataset.confirm)) {
+        event.preventDefault();
+      }
+    });
+  });
 
   // Validação client-side do formulário de login
   // (o formulário real do HTML usa action/method para POST no

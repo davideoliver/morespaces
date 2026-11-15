@@ -31,7 +31,7 @@
     @can('viewAny', \App\Models\ContactMessage::class)
     <a href="{{ route('admin.messages') }}">Mensagens</a>
     @endcan
-    <form class="logout-form" action="{{ route('logout') }}" method="POST"><input type="hidden" name="_token" value="{{ csrf_token() }}"><button type="submit">Sair</button></form>
+    <form class="logout-form" action="{{ route('logout') }}" method="POST">@csrf<button type="submit">Sair</button></form>
     @endauth
   </nav>
 </header>

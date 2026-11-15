@@ -94,14 +94,11 @@
             <h2>Contatos</h2>
           </header>
           <h3>Mande sua mensagem</h3>
-          {{-- O token CSRF é inserido manualmente (em vez da diretiva @csrf)
-               para evitar que o validador W3C acuse o atributo
-               autocomplete="off" indevidamente presente em campos hidden.
-               csrf_token() gera o mesmo valor que a diretiva usaria.
+          {{-- A diretiva @csrf insere o token exigido pelo middleware de sessão.
                old('campo') repopula o campo com o valor digitado
                anteriormente caso a validação falhe (evita o usuário
                ter que redigitar tudo de novo). --}}
-          <form action="{{ route('contact') }}" method="POST"><input type="hidden" name="_token" value="{{ csrf_token() }}">
+          <form action="{{ route('contact') }}" method="POST">@csrf
             <div><label for="nome">Nome:</label><input type="text" id="nome" name="nome" value="{{ old('nome') }}" required></div>
             <div><label for="contatoEmail">E-mail:</label><input type="email" id="contatoEmail" name="contatoEmail" value="{{ old('contatoEmail') }}" required></div>
             <div><label for="mensagem">Mensagem:</label><textarea id="mensagem" name="mensagem" required>{{ old('mensagem') }}</textarea></div>
@@ -118,7 +115,7 @@
       <x-auth-section section-id="login" section-style="padding-right: 0;" figure-class="auth-figure--login" image="pipes.webp" image-alt="Marca MoreSpaces para identificação segura" caption="Seu espaço, sempre ao seu alcance." :image-first="false">
           <p class="eyebrow">Acesso</p>
           <h2>Login</h2>
-          <form id="loginForm" action="{{ route('login') }}" method="POST"><input type="hidden" name="_token" value="{{ csrf_token() }}">
+          <form id="loginForm" action="{{ route('login') }}" method="POST">@csrf
             <div><label for="loginUsername">Usuário</label><input type="text" id="loginUsername" name="username" autocomplete="username" required></div>
             <div><label for="loginPassword">Senha</label><input type="password" id="loginPassword" name="password" autocomplete="current-password" required></div>
             <p id="loginMessage" class="form-message" aria-live="polite"></p>
@@ -132,7 +129,7 @@
       <x-auth-section section-id="register" section-style="padding-left: 0;" figure-class="auth-figure--register" image="eletricstation.webp" image-alt="Ambiente MoreSpaces pronto para novos membros" caption="Faça parte do próximo capítulo.">
           <p class="eyebrow">Comece agora</p>
           <h2>Cadastro</h2>
-          <form id="registerForm" action="{{ route('register') }}" method="POST"><input type="hidden" name="_token" value="{{ csrf_token() }}">
+          <form id="registerForm" action="{{ route('register') }}" method="POST">@csrf
             <div><label for="registerName">Nome</label><input type="text" id="registerName" name="name" autocomplete="name" required></div>
             <div><label for="registerUsername">Usuário</label><input type="text" id="registerUsername" name="username" autocomplete="username" required></div>
             <div><label for="registerPassword">Senha</label><input type="password" id="registerPassword" name="password" autocomplete="new-password" minlength="8" required></div>

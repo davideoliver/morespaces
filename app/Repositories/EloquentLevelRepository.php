@@ -34,7 +34,17 @@ class EloquentLevelRepository implements LevelRepository
 
     public function create(array $attributes): Level
     {
-        return Level::query()->create($attributes);
+        $createdBy = $attributes['created_by'] ?? null;
+        unset($attributes['created_by']);
+
+        $level = Level::query()->create($attributes);
+
+        if ($createdBy !== null) {
+            $level->created_by = $createdBy;
+            $level->save();
+        }
+
+        return $level->refresh();
     }
 
     public function update(Level $level, array $attributes): Level

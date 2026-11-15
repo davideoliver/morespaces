@@ -5,6 +5,7 @@ use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
 use App\Http\Middleware\EnsureRole;
 use App\Http\Middleware\AddLogContext;
+use App\Http\Middleware\SecurityHeaders;
 use App\Exceptions\DuplicateLevelNumberException;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Auth\AuthenticationException;
@@ -45,6 +46,7 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware): void {
+        $middleware->append(SecurityHeaders::class);
         $middleware->append(AddLogContext::class);
         $middleware->alias([
             'role' => EnsureRole::class,
