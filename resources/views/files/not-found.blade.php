@@ -4,7 +4,7 @@
 
 @section('content')
 <div class="page-shell files-page">
-  {{-- Renderizada pelo HomeController::file() com status HTTP 404
+  {{-- Renderizada pelo FilesController::show() com status HTTP 404
        sempre que o nível solicitado ainda não tem conteúdo real
        (nenhuma integração com banco de dados foi feita até o momento). --}}
   <main class="files-not-found">
