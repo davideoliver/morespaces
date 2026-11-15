@@ -3,7 +3,6 @@
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
-use Illuminate\Foundation\Http\Middleware\ValidateCsrfToken;
 use App\Http\Middleware\EnsureRole;
 use App\Http\Middleware\AddLogContext;
 use App\Http\Middleware\SecurityHeaders;
@@ -47,9 +46,6 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware): void {
-        $middleware->web(append: [
-            ValidateCsrfToken::class,
-        ]);
         $middleware->append(SecurityHeaders::class);
         $middleware->append(AddLogContext::class);
         $middleware->alias([

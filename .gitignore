@@ -22,3 +22,4 @@
 *.cache
 *.cache
 .phpunit.result.cache
+/database/*.sqlite
