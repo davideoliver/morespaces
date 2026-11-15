@@ -4,8 +4,7 @@
 
 @section('content')
 <div class="page-shell files-page">
-  <x-site-header :is-authenticated="$isAuthenticated" :is-spaces-user="$isSpacesUser" files-page />
-  @if ($isSpacesUser)
+  <x-site-header files-page />
   <main class="files-content">
     <section class="files-hero">
       <p class="eyebrow">M.G.E</p>
@@ -30,15 +29,5 @@
       </div>
     </section>
   </main>
-  @else
-  <main class="files-empty">
-    <div>
-      <p class="eyebrow">MoreSpaces</p>
-      <h1>Não há arquivos disponíveis.</h1>
-      <p>Continue acompanhando a MoreSpaces para saber quando novos espaços forem liberados.</p>
-      <a class="button-link" href="{{ route('home') }}#home">Voltar para Home</a>
-    </div>
-  </main>
-  @endif
 </div>
 @endsection

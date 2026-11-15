@@ -3,7 +3,7 @@
 
 @section('content')
 <div class="page-shell">
-  <x-site-header :is-authenticated="$isAuthenticated" :is-spaces-user="$isSpacesUser" />
+  <x-site-header />
   {{-- Faixa de mensagens de feedback (sucesso de formulário ou erros
        de validação). Some sozinha após alguns segundos via a
        animação CSS "collapseFlashMessage" definida em style.css. --}}
@@ -113,14 +113,15 @@
     {{-- As seções de Login e Cadastro só são renderizadas no HTML
          quando o visitante NÃO está autenticado — uma vez logado,
          esse bloco inteiro desaparece da página. --}}
-    @if (!$isAuthenticated)
+    @guest
     <div class="page-article" style="background-color: #1c2c2a;">
       <x-auth-section section-id="login" section-style="padding-right: 0;" figure-class="auth-figure--login" image="pipes.webp" image-alt="Marca MoreSpaces para identificação segura" caption="Seu espaço, sempre ao seu alcance." :image-first="false">
           <p class="eyebrow">Acesso</p>
           <h2>Login</h2>
-          <form action="{{ route('login') }}" method="POST"><input type="hidden" name="_token" value="{{ csrf_token() }}">
+          <form id="loginForm" action="{{ route('login') }}" method="POST"><input type="hidden" name="_token" value="{{ csrf_token() }}">
             <div><label for="loginUsername">Usuário</label><input type="text" id="loginUsername" name="username" autocomplete="username" required></div>
             <div><label for="loginPassword">Senha</label><input type="password" id="loginPassword" name="password" autocomplete="current-password" required></div>
+            <p id="loginMessage" class="form-message" aria-live="polite"></p>
             <button type="submit">Entrar</button>
           </form>
           <p>Ainda não tem cadastro? <a href="#register">Criar uma conta</a></p>
@@ -131,16 +132,17 @@
       <x-auth-section section-id="register" section-style="padding-left: 0;" figure-class="auth-figure--register" image="eletricstation.webp" image-alt="Ambiente MoreSpaces pronto para novos membros" caption="Faça parte do próximo capítulo.">
           <p class="eyebrow">Comece agora</p>
           <h2>Cadastro</h2>
-          <form action="{{ route('register') }}" method="POST"><input type="hidden" name="_token" value="{{ csrf_token() }}">
+          <form id="registerForm" action="{{ route('register') }}" method="POST"><input type="hidden" name="_token" value="{{ csrf_token() }}">
             <div><label for="registerName">Nome</label><input type="text" id="registerName" name="name" autocomplete="name" required></div>
-            <div><label for="registerRg">RG</label><input type="text" id="registerRg" name="rg" required></div>
             <div><label for="registerUsername">Usuário</label><input type="text" id="registerUsername" name="username" autocomplete="username" required></div>
             <div><label for="registerPassword">Senha</label><input type="password" id="registerPassword" name="password" autocomplete="new-password" minlength="8" required></div>
+            <div><label for="registerPasswordConfirmation">Confirme a senha</label><input type="password" id="registerPasswordConfirmation" name="password_confirmation" autocomplete="new-password" minlength="8" required></div>
+            <p id="registerMessage" class="form-message" aria-live="polite"></p>
             <button type="submit">Cadastrar</button>
           </form>
       </x-auth-section>
     </div>
-    @endif
+    @endguest
 
     <x-site-footer />
   </main>

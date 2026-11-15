@@ -19,34 +19,8 @@ class HomeController extends Controller
     public function index(): View
     {
         return view('home', [
-            'isAuthenticated' => $this->isAuthenticated(),
-            'isSpacesUser' => $this->isSpacesUser(),
             'events' => config('morespaces.events', []),
             'faqs' => config('morespaces.faqs', []),
         ]);
-    }
-
-    /**
-     * Verifica se o usuário logado é um "Spaces User".
-     *
-     * Regra simplificada: o username salvo em sessão precisa conter a
-     * substring "spaces" (case-insensitive). É essa flag que libera o
-     * link "Arquivos" no menu e o acesso à área de níveis.
-     */
-    private function isSpacesUser(): bool
-    {
-        return str_contains(strtolower((string) session('username')), 'spaces');
-    }
-
-    /**
-     * Verifica se existe uma sessão de usuário ativa.
-     *
-     * Não usa o sistema de Auth do Laravel (Auth::check()) porque não
-     * há model/tabela de usuários — a "autenticação" é apenas a
-     * presença da chave 'username' na sessão.
-     */
-    private function isAuthenticated(): bool
-    {
-        return (string) session('username') !== '';
     }
 }

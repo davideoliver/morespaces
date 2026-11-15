@@ -1,6 +1,4 @@
 @props([
-    'isAuthenticated' => false,
-    'isSpacesUser' => false,
     'filesPage' => false,
 ])
 
@@ -22,13 +20,13 @@
     <a href="#home" aria-current="page">Home</a><a href="#about-start">Sobre</a><a href="#faq">FAQ</a>
     <a href="#contact">Contatos</a>
     @endif
-    @if (!$isAuthenticated)
+    @guest
     <a href="{{ $filesPage ? route('home').'#login' : '#login' }}">Login</a>
     <a href="{{ $filesPage ? route('home').'#register' : '#register' }}">Cadastro</a>
-    @endif
-    @if ($isSpacesUser)<a href="{{ route('files') }}" @if ($filesPage) aria-current="page" @endif>Arquivos</a>@endif
-    @if ($isAuthenticated)
+    @endguest
+    @auth
+    <a href="{{ route('files') }}" @if ($filesPage) aria-current="page" @endif>Arquivos</a>
     <form class="logout-form" action="{{ route('logout') }}" method="POST"><input type="hidden" name="_token" value="{{ csrf_token() }}"><button type="submit">Sair</button></form>
-    @endif
+    @endauth
   </nav>
 </header>

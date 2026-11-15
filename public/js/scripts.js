@@ -3,9 +3,8 @@
  *
  * Contraste com o site.js da versão estática: aqui NÃO existe simulação
  * de sessão via localStorage nem envio simulado de formulários — tudo
- * isso é responsabilidade do HomeController no servidor. O Blade já
- * renderiza o HTML certo para cada estado (@if($isAuthenticated),
- * @if($isSpacesUser)), e os <form> fazem POST de verdade para as rotas
+ * isso é responsabilidade do servidor. O Blade já renderiza o HTML
+ * certo para cada estado (@auth/@guest), e os <form> fazem POST de verdade para as rotas
  * do Laravel. Por isso este arquivo é bem mais enxuto: cuida apenas de
  * comportamentos puramente visuais que independem de back-end — o menu
  * mobile, a navegação suave com destaque de seção ativa (scrollspy) e o
@@ -186,7 +185,7 @@ const initializePage = () => {
   const loginForm = document.getElementById('loginForm');
   const registerForm = document.getElementById('registerForm');
 
-  // Validação client-side de demonstração para o formulário de login
+  // Validação client-side do formulário de login
   // (o formulário real do HTML usa action/method para POST no
   // servidor; o envio só é interrompido quando a validação falha).
   loginForm?.addEventListener('submit', (event) => {
@@ -206,15 +205,15 @@ const initializePage = () => {
   // e tamanho mínimo de senha, apenas para feedback imediato ao usuário.
   registerForm?.addEventListener('submit', (event) => {
     const name = document.getElementById('registerName').value.trim();
-    const rg = document.getElementById('registerRg').value.trim();
     const username = document.getElementById('registerUsername').value.trim();
     const password = document.getElementById('registerPassword').value;
+    const confirmation = document.getElementById('registerPasswordConfirmation').value;
     const message = document.getElementById('registerMessage');
-    const isValid = Boolean(name && rg && username && password.length >= 8);
+    const isValid = Boolean(name && username && password.length >= 8 && password === confirmation);
 
     if (!isValid) {
       event.preventDefault();
-      message.textContent = 'Preencha todos os campos e use uma senha com no mínimo 8 caracteres.';
+      message.textContent = 'Preencha todos os campos, confirme a senha e use no mínimo 8 caracteres.';
       message.className = 'form-message is-error';
     }
   });

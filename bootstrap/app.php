@@ -39,13 +39,28 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware): void {
-        // Middleware configuration belongs here as the application grows.
-        // Ex.: middlewares globais, grupos de rota (web/api) ou aliases
-        // customizados seriam registrados dentro desta closure.
+        $middleware->redirectGuestsTo(
+            fn (Request $request): string => route('home').'#login'
+        );
+        $middleware->redirectUsersTo(
+            fn (Request $request): string => route('home')
+        );
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         $exceptions->render(function (\Throwable $exception, Request $request) {
             $isJsonRequest = $request->is('api/*') || $request->expectsJson();
+
+            if ($exception instanceof ValidationException && ! $isJsonRequest) {
+                $section = $request->routeIs('register') ? 'register' : 'login';
+
+                return redirect()->to(route('home').'#'.$section)
+                    ->withErrors($exception->errors())
+                    ->withInput();
+            }
+
+            if ($exception instanceof AuthenticationException && ! $isJsonRequest) {
+                return redirect()->to(route('home').'#login');
+            }
 
             if ($exception instanceof ValidationException) {
                 $status = 422;

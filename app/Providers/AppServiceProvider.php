@@ -10,6 +10,10 @@ use App\Repositories\EloquentLevelRepository;
 use App\Repositories\EloquentUserRepository;
 use App\Repositories\LevelRepository;
 use App\Repositories\UserRepository;
+use Illuminate\Cache\RateLimiting\Limit;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\RateLimiter;
+use Illuminate\Support\Str;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -23,5 +27,16 @@ class AppServiceProvider extends ServiceProvider
 
     public function boot(): void
     {
+        RateLimiter::for('login', function (Request $request): Limit {
+            return Limit::perMinute(5)->by(
+                Str::lower((string) $request->input('username')).'|'.$request->ip()
+            );
+        });
+
+        RateLimiter::for('register', function (Request $request): Limit {
+            return Limit::perMinute(5)->by(
+                Str::lower((string) $request->input('username')).'|'.$request->ip()
+            );
+        });
     }
 }

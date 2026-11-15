@@ -4,43 +4,46 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\LoginRequest;
+use App\Http\Requests\RegisterRequest;
+use App\Services\AuthService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Validation\ValidationException;
 
-/**
- * Controla o fluxo de autenticação simplificado baseado em sessão.
- */
 class AuthController extends Controller
 {
-    public function login(Request $request): RedirectResponse
-    {
-        $request->validate([
-            'username' => ['required', 'string'],
-            'password' => ['required', 'string'],
-        ]);
-
-        $request->session()->regenerate();
-        $request->session()->put('username', $request->string('username')->toString());
-
-        return back()->with('success', 'Login realizado com sucesso!');
+    public function __construct(
+        private readonly AuthService $auth,
+    ) {
     }
 
-    public function register(Request $request): RedirectResponse
+    public function login(LoginRequest $request): RedirectResponse
     {
-        $request->validate([
-            'name' => ['required', 'string', 'max:120'],
-            'rg' => ['required', 'string', 'max:30'],
-            'username' => ['required', 'string', 'max:80'],
-            'password' => ['required', 'string', 'min:8'],
-        ]);
+        if (! $this->auth->attempt($request->string('username')->toString(), $request->string('password')->toString())) {
+            throw ValidationException::withMessages([
+                'username' => 'Credenciais inválidas',
+            ]);
+        }
 
-        return back()->with('success', 'Cadastro realizado com sucesso!');
+        $request->session()->regenerate();
+
+        return redirect()->route('home')->with('success', 'Login realizado com sucesso!');
+    }
+
+    public function register(RegisterRequest $request): RedirectResponse
+    {
+        $this->auth->register($request->validated());
+
+        return redirect()->route('home')->with('success', 'Cadastro realizado com sucesso!');
     }
 
     public function logout(Request $request): RedirectResponse
     {
-        $request->session()->forget('username');
-        $request->session()->regenerate();
+        Auth::logout();
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
 
         return redirect()->route('home')->with('success', 'Você saiu da sua conta.');
     }

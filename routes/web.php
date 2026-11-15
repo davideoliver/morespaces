@@ -23,19 +23,26 @@ Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::post('/enviar', [ContactController::class, 'store'])->name('contact');
 
 // Recebe o formulário de login da seção #login.
-Route::post('/login', [AuthController::class, 'login'])->name('login');
+Route::post('/login', [AuthController::class, 'login'])
+    ->middleware(['guest', 'throttle:login'])
+    ->name('login');
 
 // Recebe o formulário de cadastro da seção #register.
-Route::post('/cadastro', [AuthController::class, 'register'])->name('register');
+Route::post('/cadastro', [AuthController::class, 'register'])
+    ->middleware(['guest', 'throttle:register'])
+    ->name('register');
 
 // Encerra a sessão do usuário autenticado.
-Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
+Route::post('/logout', [AuthController::class, 'logout'])->middleware('auth')->name('logout');
 
 // Lista os níveis disponíveis na área restrita de Arquivos (M.G.E).
-Route::get('/arquivos', [FilesController::class, 'index'])->name('files');
+Route::get('/arquivos', [FilesController::class, 'index'])->middleware('auth')->name('files');
 
 // Exibe o conteúdo de um nível específico de arquivo.
 // ->whereNumber('level') garante, via expressão regular da rota, que
 // somente valores numéricos cheguem ao controller — qualquer outra
 // coisa (ex.: /arquivos/abc) já resulta em 404 antes mesmo do controller.
-Route::get('/arquivos/{level}', [FilesController::class, 'show'])->whereNumber('level')->name('files.level');
+Route::get('/arquivos/{level}', [FilesController::class, 'show'])
+    ->whereNumber('level')
+    ->middleware('auth')
+    ->name('files.level');
