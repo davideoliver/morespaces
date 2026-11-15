@@ -19,7 +19,8 @@
   },
   "autoload-dev": {
     "psr-4": {
-      "Database\\": "database/",
+      "Database\\Factories\\": "database/factories/",
+      "Database\\Seeders\\": "database/seeders/",
       "Tests\\": "tests/"
     }
   },
