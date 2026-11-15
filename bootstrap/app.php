@@ -4,6 +4,7 @@ use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
 use App\Http\Middleware\EnsureRole;
+use App\Exceptions\DuplicateLevelNumberException;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Auth\AuthenticationException;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
@@ -112,6 +113,11 @@ return Application::configure(basePath: dirname(__DIR__))
                 $error = 'too_many_requests';
                 $message = 'Muitas tentativas. Aguarde um momento e tente novamente.';
                 $errors = null;
+            } elseif ($exception instanceof DuplicateLevelNumberException) {
+                $status = 409;
+                $error = 'duplicate_level_number';
+                $message = $exception->getMessage();
+                $errors = ['number' => [$message]];
             } else {
                 $status = 500;
                 $error = 'internal_server_error';
@@ -139,6 +145,10 @@ return Application::configure(basePath: dirname(__DIR__))
                 }
 
                 return response()->json($payload, $status);
+            }
+
+            if ($exception instanceof DuplicateLevelNumberException) {
+                return back()->withErrors($errors)->withInput();
             }
 
             $view = in_array($status, [403, 404, 419, 429, 500], true)

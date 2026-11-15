@@ -36,15 +36,33 @@ Route::post('/cadastro', [AuthController::class, 'register'])
 Route::post('/logout', [AuthController::class, 'logout'])->middleware('auth')->name('logout');
 
 // Lista os níveis disponíveis na área restrita de Arquivos (M.G.E).
-Route::get('/arquivos', [FilesController::class, 'index'])
+Route::middleware(['auth', 'role:agent,admin'])->group(function (): void {
+    Route::get('/arquivos', [FilesController::class, 'index'])->name('files.index');
+    Route::get('/arquivos/novo', [FilesController::class, 'create'])->name('files.create');
+    Route::post('/arquivos', [FilesController::class, 'store'])->name('files.store');
+    Route::get('/arquivos/{level}/editar', [FilesController::class, 'edit'])
+        ->whereNumber('level')
+        ->name('files.edit');
+    Route::get('/arquivos/{level}', [FilesController::class, 'show'])
+        ->whereNumber('level')
+        ->name('files.show');
+    Route::put('/arquivos/{level}', [FilesController::class, 'update'])
+        ->whereNumber('level')
+        ->name('files.update');
+    Route::delete('/arquivos/{level}', [FilesController::class, 'destroy'])
+        ->whereNumber('level')
+        ->name('files.destroy');
+
+});
+
+// Alias legado sem duplicar a rota canônica usada pelo roteador.
+Route::get('/arquivos/{legacy?}', [FilesController::class, 'index'])
+    ->where('legacy', '__legacy__')
     ->middleware(['auth', 'role:agent,admin'])
     ->name('files');
 
-// Exibe o conteúdo de um nível específico de arquivo.
-// ->whereNumber('level') garante, via expressão regular da rota, que
-// somente valores numéricos cheguem ao controller — qualquer outra
-// coisa (ex.: /arquivos/abc) já resulta em 404 antes mesmo do controller.
-Route::get('/arquivos/{level}', [FilesController::class, 'show'])
+Route::get('/arquivos/{level}/{legacy?}', [FilesController::class, 'show'])
     ->whereNumber('level')
+    ->where('legacy', '__legacy__')
     ->middleware(['auth', 'role:agent,admin'])
     ->name('files.level');
