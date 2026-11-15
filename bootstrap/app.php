@@ -3,6 +3,17 @@
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
+use Illuminate\Auth\Access\AuthorizationException;
+use Illuminate\Auth\AuthenticationException;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Illuminate\Http\Exceptions\ThrottleRequestsException;
+use Illuminate\Http\Request;
+use Illuminate\Session\TokenMismatchException;
+use Illuminate\Validation\ValidationException;
+use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
+use Symfony\Component\HttpKernel\Exception\MethodNotAllowedHttpException;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Symfony\Component\HttpKernel\Exception\HttpExceptionInterface;
 
 /**
  * Ponto central de bootstrap da aplicação (Laravel 11+).
@@ -33,7 +44,92 @@ return Application::configure(basePath: dirname(__DIR__))
         // customizados seriam registrados dentro desta closure.
     })
     ->withExceptions(function (Exceptions $exceptions): void {
-        // Exception configuration belongs here as the application grows.
-        // Ex.: personalizar como exceções específicas são reportadas
-        // ou renderizadas (páginas de erro customizadas, logs etc.).
+        $exceptions->render(function (\Throwable $exception, Request $request) {
+            $isJsonRequest = $request->is('api/*') || $request->expectsJson();
+
+            if ($exception instanceof ValidationException) {
+                $status = 422;
+                $error = 'validation_error';
+                $message = 'Os dados enviados são inválidos.';
+                $errors = $exception->errors();
+            } elseif ($exception instanceof AuthenticationException) {
+                $status = 401;
+                $error = 'unauthenticated';
+                $message = 'É necessário estar autenticado para continuar.';
+                $errors = null;
+            } elseif (
+                $exception instanceof AuthorizationException
+                || $exception instanceof AccessDeniedHttpException
+                || ($exception instanceof HttpExceptionInterface && $exception->getStatusCode() === 403)
+            ) {
+                $status = 403;
+                $error = 'forbidden';
+                $message = 'Você não tem permissão para acessar este recurso.';
+                $errors = null;
+            } elseif (
+                $exception instanceof ModelNotFoundException
+                || $exception instanceof NotFoundHttpException
+                || ($exception instanceof HttpExceptionInterface && $exception->getStatusCode() === 404)
+            ) {
+                $status = 404;
+                $error = 'not_found';
+                $message = 'O recurso solicitado não foi encontrado.';
+                $errors = null;
+            } elseif (
+                $exception instanceof MethodNotAllowedHttpException
+                || ($exception instanceof HttpExceptionInterface && $exception->getStatusCode() === 405)
+            ) {
+                $status = 405;
+                $error = 'method_not_allowed';
+                $message = 'O método HTTP utilizado não é permitido neste recurso.';
+                $errors = null;
+            } elseif ($exception instanceof TokenMismatchException) {
+                $status = 419;
+                $error = 'csrf_token_mismatch';
+                $message = 'A sessão expirou. Atualize a página e tente novamente.';
+                $errors = null;
+            } elseif ($exception instanceof ThrottleRequestsException) {
+                $status = 429;
+                $error = 'too_many_requests';
+                $message = 'Muitas tentativas. Aguarde um momento e tente novamente.';
+                $errors = null;
+            } else {
+                $status = 500;
+                $error = 'internal_server_error';
+                $message = 'Ocorreu um erro interno. Tente novamente mais tarde.';
+                $errors = null;
+            }
+
+            if ($isJsonRequest) {
+                $payload = [
+                    'status' => $status,
+                    'error' => $error,
+                    'message' => $message,
+                ];
+
+                if ($status === 422) {
+                    $payload['errors'] = $errors;
+                }
+
+                if (config('app.debug')) {
+                    $payload['debug'] = [
+                        'exception' => $exception::class,
+                        'file' => $exception->getFile(),
+                        'line' => $exception->getLine(),
+                    ];
+                }
+
+                return response()->json($payload, $status);
+            }
+
+            $view = in_array($status, [403, 404, 419, 429, 500], true)
+                ? "errors.{$status}"
+                : 'errors.500';
+
+            return response()->view($view, [
+                'exception' => $exception,
+                'status' => $status,
+                'message' => $message,
+            ], $status);
+        });
     })->create();
