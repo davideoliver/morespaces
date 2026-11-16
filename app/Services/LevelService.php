@@ -19,7 +19,10 @@ class LevelService
 
     public function paginate(?string $search = null): \Illuminate\Contracts\Pagination\LengthAwarePaginator
     {
-        return $this->levels->paginate($this->sanitizeSearch($search));
+        return $this->levels->paginate(
+            $this->sanitizeSearch($search),
+            (int) config('morespaces.levels_per_page', 9),
+        );
     }
 
     /** @param array<string, mixed> $data */

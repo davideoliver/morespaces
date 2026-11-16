@@ -135,6 +135,7 @@ tests/                    Testes unitários e de integração
 - [API](docs/API.md)
 - [Permissões](docs/PERMISSIONS.md)
 - [Observabilidade](docs/OBSERVABILITY.md)
+- [Medições de desempenho](docs/PERFORMANCE.md)
 - [Testes](docs/TESTING.md)
 
 ## Licença
